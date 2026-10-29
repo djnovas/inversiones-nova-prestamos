@@ -1,0 +1,2985 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" href="data:," />
+    <title>Inversiones Nova R &amp; L — Préstamos</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --surface: #ffffff;
+        --surface-2: #f7f8fa;
+        --ink: #111318;
+        --muted: #6b7280;
+        --line: #e5e7eb;
+        --accent: #2563eb;
+        --accent-dark: #1d4ed8;
+        --accent-soft: #eff4ff;
+        --danger: #dc2626;
+        --danger-soft: #fef2f2;
+        --ok: #15803d;
+        --ok-soft: #f0fdf4;
+        --shadow: 0 8px 30px rgba(17, 19, 24, 0.10);
+        color-scheme: light;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; height: 100%; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+        overscroll-behavior: none;
+      }
+      button { font-family: inherit; cursor: pointer; }
+      input, select, textarea { font-family: inherit; }
+      .hidden { display: none !important; }
+
+      /* ---------- Login ---------- */
+      .login-wrap {
+        height: 100dvh;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        display: flex;
+        padding: 24px 20px;
+      }
+      .login-card { width: 100%; max-width: 360px; margin: auto; }
+      .brand { text-align: center; margin-bottom: 32px; }
+      .brand .logo { width: 76px; height: 76px; margin: 0 auto 14px; }
+      .brand h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.02em; }
+      .brand p { margin: 0; color: var(--muted); font-size: 14px; }
+      .field { margin-bottom: 14px; }
+      .field label {
+        display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px;
+      }
+      .field input, .field select, .field textarea {
+        width: 100%; padding: 12px 14px; font-size: 16px;
+        border: 1px solid var(--line); border-radius: 10px;
+        background: var(--surface); color: var(--ink);
+        outline: none;
+      }
+      .field input:focus, .field select:focus, .field textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+      .field textarea { resize: vertical; min-height: 64px; }
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        border: 1px solid transparent; border-radius: 10px;
+        padding: 12px 18px; font-size: 15px; font-weight: 600;
+        background: var(--accent); color: #fff; text-decoration: none;
+        transition: background 0.15s ease;
+      }
+      .btn:hover { background: var(--accent-dark); }
+      .btn.block { width: 100%; }
+      .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+      .btn.ghost:hover { background: var(--surface-2); }
+      .btn.danger { background: var(--danger); color: #fff; }
+      .btn.small { padding: 8px 12px; font-size: 13px; border-radius: 8px; }
+      .form-error {
+        background: var(--danger-soft); color: var(--danger);
+        border-radius: 8px; padding: 10px 12px; font-size: 14px; margin-bottom: 14px;
+      }
+      .login-note { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 18px; line-height: 1.5; }
+      .or-divider {
+        display: flex; align-items: center; gap: 12px; margin: 18px 0 14px;
+        color: var(--muted); font-size: 12.5px;
+      }
+      .or-divider::before, .or-divider::after {
+        content: ""; flex: 1; height: 1px; background: var(--line);
+      }
+      .faceid-msg {
+        background: var(--accent-soft); color: var(--accent-dark);
+        border-radius: 8px; padding: 10px 12px; font-size: 14px; margin-top: 12px; line-height: 1.5;
+      }
+
+      /* ---------- App shell ---------- */
+      .shell { max-width: 600px; margin: 0 auto; height: 100dvh; display: flex; flex-direction: column; }
+      header.appbar {
+        position: sticky; top: 0; z-index: 20;
+        display: flex; align-items: center; gap: 10px;
+        padding: 12px 16px;
+        background: var(--bg); border-bottom: 1px solid var(--line);
+      }
+      header.appbar .logo { width: 34px; height: 34px; flex: none; }
+      header.appbar .title { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; line-height: 1.15; }
+      header.appbar .subtitle { font-size: 11.5px; color: var(--muted); }
+      header.appbar .spacer { flex: 1; }
+      .logout-btn {
+        background: transparent; border: 1px solid var(--line); color: var(--ink);
+        border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 600;
+      }
+      main { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 18px 16px 96px; }
+      nav.tabbar {
+        position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+        width: 100%; max-width: 600px; z-index: 20;
+        display: flex; background: var(--surface); border-top: 1px solid var(--line);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      nav.tabbar button {
+        flex: 1; background: none; border: none; padding: 10px 4px 8px;
+        color: var(--muted); font-size: 11.5px; font-weight: 600;
+        display: flex; flex-direction: column; align-items: center; gap: 3px;
+      }
+      nav.tabbar button svg { width: 22px; height: 22px; }
+      nav.tabbar button.active { color: var(--accent); }
+
+      /* ---------- Content ---------- */
+      .view-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+      .view-head h2 { margin: 0; font-size: 22px; letter-spacing: -0.02em; }
+      .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+      .stat {
+        border: 1px solid var(--line); border-radius: 12px; padding: 14px;
+        background: var(--surface);
+      }
+      .stat .label { font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+      .stat .value { font-size: 21px; font-weight: 700; letter-spacing: -0.02em; }
+      .stat .value.blue { color: var(--accent); }
+      .stat .value.red { color: var(--danger); }
+      .stat .value.green { color: var(--ok); }
+      .section-title { font-size: 15px; font-weight: 700; margin: 22px 0 10px; }
+      .card {
+        border: 1px solid var(--line); border-radius: 12px; padding: 14px;
+        background: var(--surface); margin-bottom: 10px;
+      }
+      .card.clickable { cursor: pointer; }
+      .card.clickable:hover { border-color: var(--accent); }
+      .row { display: flex; align-items: center; gap: 10px; }
+      .row .grow { flex: 1; min-width: 0; }
+      .avatar {
+        flex: none; border-radius: 50%; color: #fff;
+        width: 44px; height: 44px; font-size: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; letter-spacing: 0.02em;
+      }
+      .avatar.big { width: 54px; height: 54px; font-size: 19px; }
+      .name { font-weight: 650; font-size: 15.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+      .amount { font-weight: 700; font-size: 15.5px; white-space: nowrap; }
+      .chip {
+        display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px;
+        border-radius: 999px; letter-spacing: 0.02em;
+      }
+      .chip.blue { background: var(--accent-soft); color: var(--accent); }
+      .chip.red { background: var(--danger-soft); color: var(--danger); }
+      .chip.green { background: var(--ok-soft); color: var(--ok); }
+      .chip.gray { background: var(--surface-2); color: var(--muted); }
+      .progress { height: 6px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin-top: 10px; border: 1px solid var(--line); }
+      .progress > div { height: 100%; background: var(--accent); border-radius: 999px; }
+      .icon-actions { display: flex; gap: 8px; flex: none; }
+      .icon-btn {
+        width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line);
+        background: var(--surface); display: inline-flex; align-items: center; justify-content: center;
+        color: var(--ink); text-decoration: none;
+      }
+      .icon-btn svg { width: 18px; height: 18px; }
+      .icon-btn.wa { color: #128c4b; }
+      .search {
+        width: 100%; padding: 11px 14px; font-size: 16px; margin-bottom: 14px;
+        border: 1px solid var(--line); border-radius: 10px;
+        background: var(--surface); color: var(--ink); outline: none;
+      }
+      .search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+      .empty {
+        text-align: center; color: var(--muted); padding: 36px 20px;
+        border: 1px dashed var(--line); border-radius: 12px; font-size: 14.5px; line-height: 1.55;
+      }
+      .empty strong { color: var(--ink); display: block; font-size: 16px; margin-bottom: 4px; }
+      .kv { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+      .kv:last-child { border-bottom: none; }
+      .kv .k { color: var(--muted); }
+      .kv .v { font-weight: 600; text-align: right; }
+      .back-btn { background: none; border: none; color: var(--accent); font-size: 15px; font-weight: 600; padding: 0 0 14px; }
+      .installment { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+      .installment:last-child { border-bottom: none; }
+      .installment .n { width: 30px; height: 30px; flex: none; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+      .installment.paid .n { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+      .installment.overdue .n { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
+      .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+      .btn-row .btn { flex: 1; min-width: 130px; }
+
+      /* ---------- Modal ---------- */
+      .modal-backdrop {
+        position: fixed; inset: 0; background: rgba(10, 10, 12, 0.5); z-index: 50;
+        display: flex; align-items: flex-end; justify-content: center;
+      }
+      @media (min-width: 640px) { .modal-backdrop { align-items: center; padding: 20px; } }
+      .modal {
+        background: var(--surface); width: 100%; max-width: 480px; max-height: 92dvh;
+        overflow-y: auto; border-radius: 16px 16px 0 0; padding: 20px;
+      }
+      @media (min-width: 640px) { .modal { border-radius: 16px; } }
+      .modal h3 { margin: 0 0 16px; font-size: 18px; letter-spacing: -0.01em; }
+      .modal .preview {
+        background: var(--accent-soft); border-radius: 10px; padding: 12px 14px;
+        font-size: 14px; margin-bottom: 14px; line-height: 1.6;
+      }
+
+      /* ---------- Toast ---------- */
+      .toast {
+        position: fixed; left: 50%; bottom: 92px; transform: translateX(-50%);
+        background: var(--ink); color: var(--bg); padding: 11px 18px; border-radius: 999px;
+        font-size: 14px; font-weight: 600; z-index: 80; box-shadow: var(--shadow);
+        max-width: calc(100vw - 32px); text-align: center;
+      }
+      .note-box {
+        background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px;
+        padding: 14px; font-size: 13.5px; color: var(--muted); line-height: 1.6; margin-bottom: 14px;
+      }
+      .note-box strong { color: var(--ink); }
+
+      /* ---------- Vista previa del recibo (mismo diseño que el PDF) ---------- */
+      .receipt-card {
+        border: 1px solid #d6dde8; border-radius: 10px; overflow: hidden;
+        background: #ffffff; margin-bottom: 14px;
+      }
+      .receipt-band {
+        background: #123f7b; color: #ffffff;
+        display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+      }
+      .receipt-logo { width: 42px; height: 42px; flex: none; }
+      .receipt-logo svg { width: 100%; height: 100%; display: block; }
+      .receipt-band-title { font-weight: 700; font-size: 16.5px; line-height: 1.2; }
+      .receipt-band-sub { font-size: 10px; letter-spacing: 2.5px; color: #cfe0f2; margin-top: 3px; }
+      .receipt-band-date { margin-left: auto; font-size: 12px; white-space: nowrap; }
+      .receipt-body { padding: 14px 16px 16px; }
+      .receipt-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+      .receipt-sec { font-size: 10px; font-weight: 700; letter-spacing: 1.4px; color: #123f7b; margin-bottom: 2px; }
+      .receipt-flabel { color: #64748b; font-size: 12.5px; margin-top: 8px; }
+      .receipt-fvalue { font-size: 13.5px; line-height: 1.35; }
+      .receipt-fvalue.bold { font-weight: 700; }
+      .receipt-rbox {
+        background: #eef3fa; border: 1px solid #d6dde8; border-radius: 6px;
+        padding: 10px 12px; margin-top: 8px;
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      }
+      .receipt-rbox span { color: #123f7b; font-weight: 700; font-size: 13.5px; }
+      .receipt-rbox strong { color: #123f7b; font-size: 19px; white-space: nowrap; }
+      .receipt-prow {
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        font-size: 12.5px; color: #475569; margin-top: 8px;
+      }
+      .receipt-progress { height: 12px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-top: 6px; }
+      .receipt-progress > div { height: 100%; background: #123f7b; border-radius: 999px; }
+      .receipt-sum3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+      .receipt-slabel { font-size: 11px; color: #64748b; }
+      .receipt-svalue { font-size: 12.5px; font-weight: 700; margin-top: 2px; line-height: 1.35; }
+      .receipt-note { font-size: 12px; color: #64748b; margin-top: 10px; }
+      .receipt-amount {
+        background: #123f7b; color: #ffffff; border-radius: 6px;
+        padding: 12px 14px; margin-top: 14px;
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      }
+      .receipt-amount span { font-size: 11px; letter-spacing: 2px; }
+      .receipt-amount strong { font-size: 21px; white-space: nowrap; }
+      .receipt-foot { font-size: 12px; color: #64748b; line-height: 1.55; margin-top: 12px; }
+    </style>
+  </head>
+  <body>
+    <!-- ============ LOGIN ============ -->
+    <div id="loginView" class="login-wrap hidden">
+      <div class="login-card">
+        <div class="brand">
+          <div class="logo" id="loginLogo"></div>
+          <h1>Inversiones Nova R &amp; L</h1>
+          <p>Control de préstamos</p>
+        </div>
+        <form id="loginForm" autocomplete="off">
+          <div id="loginError" class="form-error hidden">Usuario o contraseña incorrectos.</div>
+          <div class="field">
+            <label for="loginUser">Usuario</label>
+            <input id="loginUser" type="text" autocapitalize="none" autocomplete="username" required />
+          </div>
+          <div class="field">
+            <label for="loginPass">Contraseña</label>
+            <input id="loginPass" type="password" autocomplete="current-password" required />
+          </div>
+          <button class="btn block" type="submit">Entrar</button>
+        </form>
+        <div id="faceIdArea" class="hidden">
+          <div class="or-divider"><span>o</span></div>
+          <button class="btn ghost block" type="button" id="faceIdBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M3 8V6a3 3 0 0 1 3-3h2"/><path d="M16 3h2a3 3 0 0 1 3 3v2"/><path d="M21 16v2a3 3 0 0 1-3 3h-2"/><path d="M8 21H6a3 3 0 0 1-3-3v-2"/><path d="M9 9v2"/><path d="M15 9v2"/><path d="M12 9v4a1.5 1.5 0 0 0 1.5 1.5"/><path d="M9.5 17.5c.7.6 1.6.9 2.5.9s1.8-.3 2.5-.9"/></svg>
+            Entrar con Face ID
+          </button>
+          <div id="faceIdMsg" class="faceid-msg hidden"></div>
+        </div>
+        <p class="login-note" id="loginNote">Tus datos se guardan en este teléfono.<br />La sincronización en la nube es opcional y va cifrada.</p>
+      </div>
+    </div>
+
+    <!-- ============ APP ============ -->
+    <div id="appView" class="shell hidden">
+      <header class="appbar">
+        <div class="logo" id="appLogo"></div>
+        <div>
+          <div class="title">Inversiones Nova R &amp; L</div>
+          <div class="subtitle">Préstamos · datos en este teléfono</div>
+        </div>
+        <div class="spacer"></div>
+        <button class="logout-btn" id="logoutBtn" type="button">Salir</button>
+      </header>
+      <main id="mainView"></main>
+      <nav class="tabbar" id="tabbar">
+        <button type="button" data-tab="resumen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+          Resumen
+        </button>
+        <button type="button" data-tab="clientes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M16 5.4a3.5 3.5 0 0 1 0 6.2"/><path d="M17.5 15.4c1.7.7 2.7 2.2 3 4.6"/></svg>
+          Clientes
+        </button>
+        <button type="button" data-tab="prestamos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>
+          Préstamos
+        </button>
+        <button type="button" data-tab="ganancias">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>
+          Ganancias
+        </button>
+        <button type="button" data-tab="ajustes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+          Respaldo
+        </button>
+      </nav>
+    </div>
+
+    <div id="modalRoot"></div>
+    <div id="toastRoot"></div>
+
+    <script>
+      "use strict";
+
+      /* ================= Logo (N con flecha de crecimiento) ================= */
+      var LOGO_SVG =
+        '<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Inversiones Nova R y L">' +
+        '<rect x="2" y="2" width="60" height="60" rx="14" fill="#2563eb"/>' +
+        '<path d="M20 46V18l24 28V18" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="M14 14l10 2-2 10" stroke="#93c5fd" stroke-width="0" fill="none"/>' +
+        '<path d="M40 12h12v12" stroke="#bfdbfe" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="M52 12L36 26" stroke="#bfdbfe" stroke-width="4.5" stroke-linecap="round"/>' +
+        "</svg>";
+      document.getElementById("loginLogo").innerHTML = LOGO_SVG;
+      document.getElementById("appLogo").innerHTML = LOGO_SVG;
+
+      /* ================= Constantes ================= */
+      var LOGIN_USER = "rnova";
+      /* Verificador de acceso con KDF lento con sal (PBKDF2-HMAC-SHA256, 600 000 iteraciones)
+         calculado sobre el SHA-256 de la contraseña: en el código ya NO viaja ningún hash
+         rápido de la contraseña, así que no se puede atacar por fuerza bruta rápida sin conexión.
+         La contraseña del usuario no cambió: sigue siendo la misma de siempre. */
+      var LOGIN_SALT = "4945ae815c8db30abed467036680497d";
+      var LOGIN_PBKDF2_ITER = 600000;
+      var LOGIN_VERIFIER = "364b9a948ed5902df8e8a8af94800f7e929d2f1f796926d65b99d96e7918c234";
+      var SESSION_KEY = "nova_session_v1";
+      var DATA_KEY = "nova_data_v1";
+      var FACEID_KEY = "nova_faceid_v1";
+
+      /* ================= SHA-256 (WebCrypto con respaldo en JS puro) ================= */
+      function sha256Hex(str) {
+        if (window.crypto && crypto.subtle && window.TextEncoder) {
+          return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function (buf) {
+            return Array.prototype.map
+              .call(new Uint8Array(buf), function (b) { return ("0" + b.toString(16)).slice(-2); })
+              .join("");
+          }).catch(function () { return Promise.resolve(sha256Js(str)); });
+        }
+        return Promise.resolve(sha256Js(str));
+      }
+      // Implementación compacta de SHA-256 (dominio público, estilo geraintluff)
+      function sha256Js(ascii) {
+        function rr(v, a) { return (v >>> a) | (v << (32 - a)); }
+        var mathPow = Math.pow, maxWord = mathPow(2, 32), result = "";
+        var words = [], asciiBitLength = ascii.length * 8;
+        var hash = (sha256Js.h = sha256Js.h || []), k = (sha256Js.k = sha256Js.k || []);
+        var primeCounter = k.length, isComposite = {};
+        for (var candidate = 2; primeCounter < 64; candidate++) {
+          if (!isComposite[candidate]) {
+            for (var i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+            hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+            k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+          }
+        }
+        ascii += "\x80";
+        while ((ascii.length % 64) - 56) ascii += "\x00";
+        for (var j = 0; j < ascii.length; j++) {
+          var code = ascii.charCodeAt(j);
+          if (code >> 8) return sha256Hex(unescape(encodeURIComponent(ascii)));
+          words[j >> 2] |= code << (((3 - j) % 4) * 8);
+        }
+        words[words.length] = (asciiBitLength / maxWord) | 0;
+        words[words.length] = asciiBitLength;
+        for (var block = 0; block < words.length;) {
+          var w = words.slice(block, (block += 16)), oldHash = hash;
+          hash = hash.slice(0, 8);
+          for (var n = 0; n < 64; n++) {
+            var w15 = w[n - 15], w2 = w[n - 2];
+            var a = hash[0], e = hash[4];
+            var temp1 =
+              hash[7] +
+              (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) +
+              ((e & hash[5]) ^ (~e & hash[6])) +
+              k[n] +
+              (w[n] =
+                n < 16
+                  ? w[n]
+                  : (w[n - 16] +
+                      (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) +
+                      w[n - 7] +
+                      (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) |
+                    0);
+            var temp2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+            hash = [(temp1 + temp2) | 0].concat(hash);
+            hash[4] = (hash[4] + temp1) | 0;
+          }
+          for (var m = 0; m < 8; m++) hash[m] = (hash[m] + oldHash[m]) | 0;
+        }
+        for (var p = 0; p < 8; p++) {
+          for (var q = 3; q + 1; q--) {
+            var byte = (hash[p] >> (q * 8)) & 255;
+            result += (byte < 16 ? "0" : "") + byte.toString(16);
+          }
+        }
+        return result;
+      }
+
+      /* ================= Verificación de la contraseña (PBKDF2 con sal) ================= */
+      function hexToBytes(hex) {
+        var out = new Uint8Array(hex.length / 2);
+        for (var i = 0; i < out.length; i++) out[i] = parseInt(hex.substr(i * 2, 2), 16);
+        return out;
+      }
+      // PBKDF2-HMAC-SHA256 (WebCrypto) sobre el hash SHA-256 en hex de la contraseña.
+      // Resuelve el verificador en hex, o null si el navegador no ofrece cifrado seguro.
+      function pbkdf2VerifierFromHash(hexHash) {
+        if (!(window.crypto && crypto.subtle && window.TextEncoder)) return Promise.resolve(null);
+        var enc = new TextEncoder();
+        return crypto.subtle.importKey("raw", enc.encode(hexHash), "PBKDF2", false, ["deriveBits"])
+          .then(function (key) {
+            return crypto.subtle.deriveBits(
+              { name: "PBKDF2", salt: hexToBytes(LOGIN_SALT), iterations: LOGIN_PBKDF2_ITER, hash: "SHA-256" },
+              key, 256);
+          })
+          .then(function (bits) {
+            return Array.prototype.map
+              .call(new Uint8Array(bits), function (b) { return ("0" + b.toString(16)).slice(-2); })
+              .join("");
+          })
+          .catch(function () { return null; });
+      }
+      // true solo si la contraseña escrita corresponde al verificador guardado.
+      function verifyAppPassword(pass) {
+        return sha256Hex(pass).then(function (hexHash) {
+          return pbkdf2VerifierFromHash(hexHash);
+        }).then(function (verifier) {
+          return !!verifier && verifier === LOGIN_VERIFIER;
+        }).catch(function () { return false; });
+      }
+
+      /* ================= Datos (localStorage) ================= */
+      var data = loadData();
+      function loadData() {
+        try {
+          var raw = localStorage.getItem(DATA_KEY);
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (parsed && Array.isArray(parsed.clients) && Array.isArray(parsed.loans) && Array.isArray(parsed.payments)) {
+              return parsed;
+            }
+          }
+        } catch (e) { /* datos corruptos: arrancar vacío */ }
+        return { clients: [], loans: [], payments: [] };
+      }
+      function saveData() {
+        try { localStorage.setItem(DATA_KEY, JSON.stringify(data)); }
+        catch (e) { toast("No se pudo guardar en el teléfono (almacenamiento lleno)."); }
+        scheduleSync();
+      }
+      function uid() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      }
+
+      /* ================= Utilidades ================= */
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+      }
+      var moneyFmt = new Intl.NumberFormat("es-DO", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      function money(n) { return "RD$ " + moneyFmt.format(Number(n) || 0); }
+      function round2(n) { return Math.round((Number(n) + Number.EPSILON) * 100) / 100; }
+      // Valor numérico de un campo de monto escrito con comas (ej.: "5,500.50" -> 5500.5)
+      function parseMoneyVal(v) { return parseFloat(String(v == null ? "" : v).replace(/,/g, "")); }
+      // Monto listo para mostrar dentro de un campo: miles con coma, sin decimales si es entero
+      function moneyInputValue(n) {
+        var s = round2(Number(n) || 0).toFixed(2).split(".");
+        var intPart = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return s[1] === "00" ? intPart : intPart + "." + s[1];
+      }
+      // Aplica el formato de miles con coma mientras se escribe, sin perder la posición del cursor
+      function attachMoneyFormat(input) {
+        if (!input) return;
+        input.addEventListener("input", function () {
+          var value = input.value;
+          var caret = input.selectionStart == null ? value.length : input.selectionStart;
+          var sigBefore = 0;
+          for (var i = 0; i < caret && i < value.length; i++) {
+            if (/[0-9.]/.test(value.charAt(i))) sigBefore++;
+          }
+          var num = value.replace(/[^0-9.]/g, "");
+          var dotIdx = num.indexOf(".");
+          var intPart = dotIdx >= 0 ? num.slice(0, dotIdx) : num;
+          intPart = intPart.replace(/^0+(?=\d)/, "");
+          var out;
+          if (dotIdx >= 0) {
+            var decPart = num.slice(dotIdx + 1).replace(/\./g, "").slice(0, 2);
+            if (intPart === "") intPart = "0";
+            out = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + decPart;
+          } else {
+            out = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          }
+          if (out === value) return;
+          input.value = out;
+          var pos = 0, seen = 0;
+          while (pos < out.length && seen < sigBefore) {
+            if (/[0-9.]/.test(out.charAt(pos))) seen++;
+            pos++;
+          }
+          try { input.setSelectionRange(pos, pos); } catch (e) {}
+        });
+      }
+      function parseDate(str) {
+        var p = String(str).split("-");
+        return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+      }
+      function toISODate(d) {
+        var m = String(d.getMonth() + 1).padStart(2, "0");
+        var day = String(d.getDate()).padStart(2, "0");
+        return d.getFullYear() + "-" + m + "-" + day;
+      }
+      function todayISO() { return toISODate(new Date()); }
+      var dateFmt = new Intl.DateTimeFormat("es-DO", { day: "numeric", month: "short", year: "numeric" });
+      function fmtDate(iso) { try { return dateFmt.format(parseDate(iso)); } catch (e) { return iso; } }
+      var dateTimeFmt = new Intl.DateTimeFormat("es-DO", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" });
+      function fmtDateTime(iso) { try { return dateTimeFmt.format(new Date(iso)); } catch (e) { return iso; } }
+      function addPeriod(iso, freq) {
+        var d = parseDate(iso);
+        if (freq === "semanal") d.setDate(d.getDate() + 7);
+        else if (freq === "quincenal") d.setDate(d.getDate() + 14);
+        else { d.setMonth(d.getMonth() + 1); }
+        return toISODate(d);
+      }
+      function freqLabel(freq) {
+        return freq === "semanal" ? "Semanal" : freq === "quincenal" ? "Quincenal" : "Mensual";
+      }
+      // Registros vivos: lo eliminado queda como lápida (deleted:true) para poder fusionar en la sincronización
+      function isLive(r) { return !!r && !r.deleted; }
+      function liveClients() { return data.clients.filter(isLive); }
+      function liveLoans() { return data.loans.filter(isLive); }
+      function livePayments() { return data.payments.filter(isLive); }
+      function clientById(id) {
+        for (var i = 0; i < data.clients.length; i++) if (data.clients[i].id === id && isLive(data.clients[i])) return data.clients[i];
+        return null;
+      }
+      function loanById(id) {
+        for (var i = 0; i < data.loans.length; i++) if (data.loans[i].id === id && isLive(data.loans[i])) return data.loans[i];
+        return null;
+      }
+      function paymentById(id) {
+        for (var i = 0; i < data.payments.length; i++) if (data.payments[i].id === id && isLive(data.payments[i])) return data.payments[i];
+        return null;
+      }
+      function loanPayments(loanId) {
+        return data.payments
+          .filter(function (p) { return p.loanId === loanId && isLive(p); })
+          .sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+      }
+      function loanPaid(loan) {
+        return round2(loanPayments(loan.id).reduce(function (s, p) { return s + Number(p.amount); }, 0));
+      }
+      function loanBalance(loan) { return round2(Number(loan.total) - loanPaid(loan)); }
+      // Interés calculado: siempre se deriva de (total a pagar − monto prestado)
+      function loanInterestAmount(loan) { return round2(Number(loan.total) - Number(loan.amount)); }
+      function loanInterestPct(loan) {
+        if (loan.interest != null && loan.interest !== "" && !isNaN(Number(loan.interest))) return Number(loan.interest);
+        if (Number(loan.amount) > 0) return round2((Number(loan.total) - Number(loan.amount)) / Number(loan.amount) * 100);
+        return 0;
+      }
+      // Monto de la cuota: el guardado en préstamos nuevos; en los antiguos se toma de su plan
+      function loanCuota(loan) {
+        if (loan.cuota != null && Number(loan.cuota) > 0) return round2(Number(loan.cuota));
+        if (loan.installments && loan.installments.length) return round2(Number(loan.installments[0].amount));
+        return 0;
+      }
+      // Estado de cada cuota según los pagos acumulados (en orden de fecha)
+      function installmentStates(loan) {
+        var paid = loanPaid(loan);
+        var acc = 0;
+        return loan.installments.map(function (inst) {
+          var covered = round2(Math.min(Math.max(paid - acc, 0), Number(inst.amount)));
+          acc = round2(acc + Number(inst.amount));
+          var today = todayISO();
+          var status = "pendiente";
+          if (covered >= Number(inst.amount)) status = "pagada";
+          else if (inst.due < today) status = "vencida";
+          return { n: inst.n, due: inst.due, amount: Number(inst.amount), covered: covered, status: status, frac: !!inst.frac };
+        });
+      }
+      function loanStatus(loan) {
+        if (loanBalance(loan) <= 0) return { key: "saldado", label: "Saldado", chip: "green" };
+        var states = installmentStates(loan);
+        for (var i = 0; i < states.length; i++) {
+          if (states[i].status === "vencida") return { key: "mora", label: "En mora", chip: "red" };
+        }
+        return { key: "activo", label: "Activo", chip: "blue" };
+      }
+      function nextDue(loan) {
+        var states = installmentStates(loan);
+        for (var i = 0; i < states.length; i++) if (states[i].status !== "pagada") return states[i];
+        return null;
+      }
+      function toast(msg) {
+        var root = document.getElementById("toastRoot");
+        root.innerHTML = '<div class="toast">' + esc(msg) + "</div>";
+        setTimeout(function () { root.innerHTML = ""; }, 2600);
+      }
+
+      /* ================= Sesión ================= */
+      var currentTab = "resumen";
+      var detail = null; // {type:'client'|'loan', id}
+      var clientSearch = "";
+      var loanSearch = "";
+      var gananciasMonth = todayISO().slice(0, 7);
+
+      function isLoggedIn() {
+        try { return sessionStorage.getItem(SESSION_KEY) === "1"; } catch (e) { return false; }
+      }
+      function startSession() {
+        try { sessionStorage.setItem(SESSION_KEY, "1"); } catch (e) {}
+        showApp();
+      }
+      function showLogin() {
+        document.getElementById("loginView").classList.remove("hidden");
+        document.getElementById("appView").classList.add("hidden");
+        var note = document.getElementById("loginNote");
+        if (note) {
+          note.innerHTML = syncEnabled()
+            ? "Sincronización en la nube activada:<br />tus datos cifrados se sincronizan entre tus teléfonos."
+            : "Tus datos se guardan en este teléfono.<br />La sincronización en la nube es opcional y va cifrada.";
+        }
+        refreshFaceIdLogin();
+      }
+      function showApp() {
+        document.getElementById("loginView").classList.add("hidden");
+        document.getElementById("appView").classList.remove("hidden");
+        render();
+        syncNow({ silent: true });
+      }
+      document.getElementById("loginForm").addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        var user = document.getElementById("loginUser").value.trim();
+        var pass = document.getElementById("loginPass").value;
+        var err = document.getElementById("loginError");
+        verifyAppPassword(pass).then(function (ok) {
+          if (user === LOGIN_USER && ok) {
+            err.classList.add("hidden");
+            document.getElementById("loginPass").value = "";
+            startSession();
+            offerFaceIdSetup();
+          } else {
+            err.classList.remove("hidden");
+          }
+        });
+      });
+      document.getElementById("logoutBtn").addEventListener("click", function () {
+        try { sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
+        detail = null;
+        showLogin();
+      });
+
+      /* ================= Face ID (llave de acceso / WebAuthn) ================= */
+      function webauthnSupported() {
+        return !!(window.PublicKeyCredential && navigator.credentials &&
+          typeof navigator.credentials.create === "function" &&
+          typeof navigator.credentials.get === "function");
+      }
+      function faceIdRegistered() {
+        try { return !!localStorage.getItem(FACEID_KEY); } catch (e) { return false; }
+      }
+      function b64urlEncode(buf) {
+        var bytes = new Uint8Array(buf);
+        var s = "";
+        for (var i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+        return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+      }
+      function b64urlDecode(str) {
+        var s = String(str).replace(/-/g, "+").replace(/_/g, "/");
+        while (s.length % 4) s += "=";
+        var bin = atob(s);
+        var bytes = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return bytes.buffer;
+      }
+      function randomBytes(n) {
+        var b = new Uint8Array(n);
+        crypto.getRandomValues(b);
+        return b;
+      }
+      function refreshFaceIdLogin() {
+        var area = document.getElementById("faceIdArea");
+        if (!area) return;
+        var show = webauthnSupported() && faceIdRegistered();
+        area.classList.toggle("hidden", !show);
+        if (show) document.getElementById("faceIdMsg").classList.add("hidden");
+      }
+      function faceIdErrorMsg(msg) {
+        var box = document.getElementById("faceIdMsg");
+        box.textContent = msg;
+        box.classList.remove("hidden");
+      }
+      function registerFaceId() {
+        return navigator.credentials.create({
+          publicKey: {
+            challenge: randomBytes(32),
+            rp: { name: "Inversiones Nova R & L", id: location.hostname },
+            user: {
+              id: randomBytes(16),
+              name: LOGIN_USER,
+              displayName: "Inversiones Nova R & L"
+            },
+            pubKeyCredParams: [
+              { type: "public-key", alg: -7 },
+              { type: "public-key", alg: -257 }
+            ],
+            authenticatorSelection: {
+              authenticatorAttachment: "platform",
+              userVerification: "required",
+              residentKey: "preferred"
+            },
+            timeout: 60000,
+            attestation: "none"
+          }
+        }).then(function (cred) {
+          if (!cred) throw new Error("sin-credencial");
+          try { localStorage.setItem(FACEID_KEY, b64urlEncode(cred.rawId)); } catch (e) {}
+        });
+      }
+      function loginWithFaceId() {
+        var stored = null;
+        try { stored = localStorage.getItem(FACEID_KEY); } catch (e) {}
+        if (!stored) {
+          faceIdErrorMsg("No hay una llave de Face ID registrada en este dispositivo. Entra con tu contraseña.");
+          return;
+        }
+        navigator.credentials.get({
+          publicKey: {
+            challenge: randomBytes(32),
+            rpId: location.hostname,
+            allowCredentials: [{ type: "public-key", id: b64urlDecode(stored) }],
+            userVerification: "required",
+            timeout: 60000
+          }
+        }).then(function (assertion) {
+          if (!assertion) throw new Error("sin-respuesta");
+          document.getElementById("loginError").classList.add("hidden");
+          startSession();
+        }).catch(function () {
+          faceIdErrorMsg("No se pudo entrar con Face ID. Puedes entrar con tu usuario y contraseña.");
+        });
+      }
+      document.getElementById("faceIdBtn").addEventListener("click", loginWithFaceId);
+      // Tras entrar con contraseña, ofrecer activar Face ID si aún no está activo
+      function offerFaceIdSetup() {
+        if (!webauthnSupported() || faceIdRegistered()) return;
+        openModal(
+          "<h3>Entrar con Face ID</h3>" +
+          "<p style='color:var(--muted);line-height:1.6'>Activa Face ID en este dispositivo para entrar la próxima vez con tu rostro, sin escribir la contraseña. Tu contraseña seguirá funcionando como respaldo.</p>" +
+          '<div class="btn-row"><button type="button" class="btn ghost" data-close>Ahora no</button>' +
+          '<button type="button" class="btn" id="faceIdActivate">Activar Face ID</button></div>'
+        );
+        document.querySelector("[data-close]").addEventListener("click", closeModal);
+        document.getElementById("faceIdActivate").addEventListener("click", function () {
+          registerFaceId().then(function () {
+            closeModal();
+            toast("Face ID activado en este dispositivo.");
+          }).catch(function () {
+            closeModal();
+            toast("No se pudo activar Face ID. Puedes intentarlo desde la pestaña Respaldo.");
+          });
+        });
+      }
+
+      /* ================= Navegación ================= */
+      document.getElementById("tabbar").addEventListener("click", function (ev) {
+        var btn = ev.target.closest("button[data-tab]");
+        if (!btn) return;
+        currentTab = btn.getAttribute("data-tab");
+        detail = null;
+        render();
+      });
+      function setTab(tab) { currentTab = tab; detail = null; render(); }
+
+      function render() {
+        var tabs = document.querySelectorAll("#tabbar button");
+        tabs.forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-tab") === currentTab && !detail);
+        });
+        var main = document.getElementById("mainView");
+        if (detail && detail.type === "client") main.innerHTML = viewClientDetail(detail.id);
+        else if (detail && detail.type === "loan") main.innerHTML = viewLoanDetail(detail.id);
+        else if (currentTab === "resumen") main.innerHTML = viewResumen();
+        else if (currentTab === "clientes") main.innerHTML = viewClientes();
+        else if (currentTab === "prestamos") main.innerHTML = viewPrestamos();
+        else if (currentTab === "ganancias") main.innerHTML = viewGanancias();
+        else if (currentTab === "ajustes") main.innerHTML = viewAjustes();
+        bindView(main);
+        main.scrollTop = 0;
+      }
+
+      /* ================= Vista: Resumen ================= */
+      function viewResumen() {
+        var porCobrar = 0, cobrado = 0, enMora = 0, activos = 0;
+        liveLoans().forEach(function (loan) {
+          var bal = loanBalance(loan);
+          porCobrar += bal;
+          cobrado += loanPaid(loan);
+          var st = loanStatus(loan);
+          if (st.key === "mora") enMora++;
+          if (st.key !== "saldado") activos++;
+        });
+        var today = todayISO();
+        var limit = toISODate(new Date(Date.now() + 7 * 86400000));
+        var upcoming = [];
+        liveLoans().forEach(function (loan) {
+          if (loanBalance(loan) <= 0) return;
+          installmentStates(loan).forEach(function (s) {
+            if (s.status !== "pagada" && s.due >= today && s.due <= limit) {
+              upcoming.push({ loan: loan, state: s });
+            }
+          });
+        });
+        upcoming.sort(function (a, b) { return a.state.due < b.state.due ? -1 : 1; });
+
+        var html = "<h2 style='margin:0 0 16px;font-size:22px;letter-spacing:-0.02em;'>Resumen</h2>";
+        html += '<div class="grid2">' +
+          statCard("Saldo por cobrar", money(porCobrar), "blue") +
+          statCard("Total cobrado", money(cobrado), "green") +
+          statCard("Préstamos activos", String(activos), "") +
+          statCard("En mora", String(enMora), enMora > 0 ? "red" : "") +
+          "</div>";
+
+        html += '<div class="section-title">Vencen en los próximos 7 días</div>';
+        if (upcoming.length === 0) {
+          html += '<div class="empty">No hay cuotas por vencer en los próximos 7 días.</div>';
+        } else {
+          upcoming.forEach(function (u) {
+            var c = clientById(u.loan.clientId);
+            var rest = round2(u.state.amount - u.state.covered);
+            html += '<div class="card clickable" data-open-loan="' + esc(u.loan.id) + '">' +
+              '<div class="row"><div class="grow">' +
+              '<div class="name">' + esc(c ? c.name : "Cliente") + '</div>' +
+              '<div class="sub">Cuota #' + u.state.n + ' · vence ' + fmtDate(u.state.due) + '</div>' +
+              '</div><div class="amount">' + money(rest) + "</div></div></div>";
+          });
+        }
+
+        if (enMora > 0) {
+          html += '<div class="section-title">Préstamos en mora</div>';
+          liveLoans().forEach(function (loan) {
+            if (loanStatus(loan).key !== "mora") return;
+            var c = clientById(loan.clientId);
+            html += '<div class="card clickable" data-open-loan="' + esc(loan.id) + '">' +
+              '<div class="row"><div class="grow">' +
+              '<div class="name">' + esc(c ? c.name : "Cliente") + '</div>' +
+              '<div class="sub">Saldo pendiente</div></div>' +
+              '<div style="text-align:right"><div class="amount">' + money(loanBalance(loan)) + '</div>' +
+              '<span class="chip red">En mora</span></div></div></div>';
+          });
+        }
+
+        if (liveClients().length === 0 && liveLoans().length === 0) {
+          html += '<div class="section-title">Para empezar</div>' +
+            '<div class="empty"><strong>Tu app está vacía</strong>Agrega tu primer cliente y luego créale un préstamo con su plan de cuotas automático.</div>' +
+            '<div class="btn-row"><button class="btn" data-action="new-client">Agregar cliente</button>' +
+            '<button class="btn ghost" data-action="new-loan">Crear préstamo</button></div>';
+        }
+        return html;
+      }
+      function statCard(label, value, cls) {
+        return '<div class="stat"><div class="label">' + esc(label) + '</div><div class="value ' + cls + '">' + esc(value) + "</div></div>";
+      }
+
+      /* ================= Vista: Clientes ================= */
+      // Iniciales del cliente: primera letra del primer nombre + primera letra del apellido.
+      // Una sola palabra: sus dos primeras letras. Nombre vacío: "?".
+      function clientInitials(name) {
+        var words = String(name || "").trim().split(/\s+/).filter(function (w) { return w.length > 0; });
+        if (words.length === 0) return "?";
+        if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+        return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+      }
+      // Color de fondo del círculo: determinista según el nombre (paleta sobria azul/gris azulado/verde azulado)
+      var AVATAR_COLORS = ["#2563eb", "#0369a1", "#0e7490", "#0f766e", "#475569", "#1e40af"];
+      function clientAvatarColor(name) {
+        var s = String(name || "").trim().toLowerCase();
+        var h = 0;
+        for (var i = 0; i < s.length; i++) h = ((h * 31) + s.charCodeAt(i)) >>> 0;
+        return AVATAR_COLORS[h % AVATAR_COLORS.length];
+      }
+      function avatarHtml(name, big) {
+        return '<div class="avatar' + (big ? " big" : "") + '" style="background:' + clientAvatarColor(name) + '" aria-hidden="true">' +
+          esc(clientInitials(name)) + "</div>";
+      }
+      function phoneActions(c) {
+        var digits = String(c.phone || "").replace(/\D/g, "");
+        var html = '<div class="icon-actions">';
+        if (digits) {
+          html += '<a class="icon-btn" href="tel:+' + digits + '" aria-label="Llamar a ' + esc(c.name) + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.6 2z"/></svg></a>';
+          html += '<a class="icon-btn wa" href="https://wa.me/' + digits + '" target="_blank" rel="noopener" aria-label="WhatsApp a ' + esc(c.name) + '">' +
+            '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.4 15.2L2 22l4.9-1.6A9.9 9.9 0 1 0 12.04 2zm0 18.1a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .9 1-2.9-.2-.3a8.2 8.2 0 1 1 6.7 3.6zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.2-.8l.5-.6c.1-.2 0-.4 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.1 2.2-.2 3.9a11.6 11.6 0 0 0 4.5 4.2c1.7.8 2.4.9 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3z"/></svg></a>';
+        }
+        return html + "</div>";
+      }
+      function viewClientes() {
+        var html = '<div class="view-head"><h2>Clientes</h2>' +
+          '<button class="btn small" data-action="new-client">+ Nuevo</button></div>';
+        html += '<input class="search" id="clientSearch" type="search" placeholder="Buscar cliente…" value="' + esc(clientSearch) + '" />';
+        var list = liveClients().slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+        if (clientSearch) {
+          var q = clientSearch.toLowerCase();
+          list = list.filter(function (c) { return c.name.toLowerCase().indexOf(q) >= 0; });
+        }
+        if (liveClients().length === 0) {
+          html += '<div class="empty"><strong>Sin clientes todavía</strong>Toca «+ Nuevo» para registrar tu primer cliente.</div>';
+        } else if (list.length === 0) {
+          html += '<div class="empty">Ningún cliente coincide con la búsqueda.</div>';
+        } else {
+          list.forEach(function (c) {
+            var loans = liveLoans().filter(function (l) { return l.clientId === c.id; });
+            var deuda = loans.reduce(function (s, l) { return s + loanBalance(l); }, 0);
+            html += '<div class="card"><div class="row">' +
+              avatarHtml(c.name, false) +
+              '<div class="grow clickable" data-open-client="' + esc(c.id) + '" style="cursor:pointer">' +
+              '<div class="name">' + esc(c.name) + "</div>" +
+              '<div class="sub">' + esc(c.phone || "Sin teléfono") +
+              (loans.length ? " · " + loans.length + (loans.length === 1 ? " préstamo" : " préstamos") : "") +
+              (deuda > 0 ? " · debe " + money(deuda) : "") +
+              "</div></div>" + phoneActions(c) + "</div></div>";
+          });
+        }
+        return html;
+      }
+      function viewClientDetail(id) {
+        var c = clientById(id);
+        if (!c) { detail = null; return viewClientes(); }
+        var html = '<button class="back-btn" data-action="back-clientes">← Clientes</button>';
+        html += '<div class="row" style="margin-bottom:14px">' + avatarHtml(c.name, true) + '<div class="grow">' +
+          '<div class="name" style="font-size:20px">' + esc(c.name) + "</div>" +
+          '<div class="sub">' + esc(c.cedula ? "Cédula " + c.cedula : "") + "</div></div>" +
+          phoneActions(c) + "</div>";
+        html += '<div class="card">' +
+          kv("Teléfono", c.phone || "—") + kv("Cédula", c.cedula || "—") +
+          kv("Dirección", c.address || "—") + kv("Notas", c.notes || "—") + "</div>";
+        html += '<div class="btn-row">' +
+          '<button class="btn" data-action="new-loan-for" data-id="' + esc(c.id) + '">Nuevo préstamo</button>' +
+          '<button class="btn ghost" data-action="edit-client" data-id="' + esc(c.id) + '">Editar</button>' +
+          '<button class="btn ghost" data-action="delete-client" data-id="' + esc(c.id) + '" style="color:var(--danger)">Eliminar</button></div>';
+        var loans = liveLoans().filter(function (l) { return l.clientId === c.id; });
+        html += '<div class="section-title">Préstamos de ' + esc(c.name.split(" ")[0]) + "</div>";
+        if (loans.length === 0) {
+          html += '<div class="empty">Este cliente no tiene préstamos registrados.</div>';
+        } else {
+          loans.forEach(function (loan) { html += loanCard(loan, false); });
+        }
+        return html;
+      }
+      function kv(k, v) {
+        return '<div class="kv"><span class="k">' + esc(k) + '</span><span class="v">' + esc(v) + "</span></div>";
+      }
+
+      /* ================= Vista: Préstamos ================= */
+      function loanCard(loan, showClient) {
+        var c = clientById(loan.clientId);
+        var st = loanStatus(loan);
+        var paid = loanPaid(loan);
+        var pct = loan.total > 0 ? Math.min(100, Math.round((paid / loan.total) * 100)) : 0;
+        var nd = nextDue(loan);
+        var html = '<div class="card clickable" data-open-loan="' + esc(loan.id) + '">' +
+          '<div class="row"><div class="grow">' +
+          '<div class="name">' + (showClient ? esc(c ? c.name : "Cliente") : money(loan.amount) + " · " + esc(freqLabel(loan.frequency))) + "</div>" +
+          '<div class="sub">' + (showClient ? money(loan.amount) + " · " : "") +
+          loan.installments.length + " cuotas · " + esc(freqLabel(loan.frequency)) +
+          (nd ? " · próxima: " + fmtDate(nd.due) : "") + "</div></div>" +
+          '<div style="text-align:right"><div class="amount">' + money(loanBalance(loan)) + '</div>' +
+          '<div class="sub">saldo</div></div></div>' +
+          '<div class="progress"><div style="width:' + pct + '%"></div></div>' +
+          '<div class="row" style="margin-top:8px"><span class="chip ' + st.chip + '">' + st.label + "</span>" +
+          '<span class="sub" style="margin:0">Pagado ' + money(paid) + " de " + money(loan.total) + "</span></div></div>";
+        return html;
+      }
+      // Fecha de creación del préstamo: createdAt en los nuevos; en los anteriores se usa
+      // updatedAt (que hasta ahora solo se fijaba al crearlos). Sin ninguna fecha: "" (va al final).
+      function loanCreatedKey(loan) {
+        return loan.createdAt || loan.updatedAt || "";
+      }
+      function loanMatchesSearch(loan, q) {
+        var c = clientById(loan.clientId);
+        var ql = q.toLowerCase();
+        if (c && c.name.toLowerCase().indexOf(ql) >= 0) return true;
+        if (c && String(c.cedula || "").toLowerCase().indexOf(ql) >= 0) return true;
+        var qd = q.replace(/\D/g, "");
+        if (qd) {
+          if (c && String(c.phone || "").replace(/\D/g, "").indexOf(qd) >= 0) return true;
+          if (c && String(c.cedula || "").replace(/\D/g, "").indexOf(qd) >= 0) return true;
+          if (String(Math.round(Number(loan.amount) || 0)).indexOf(qd) >= 0) return true;
+          if (String(Math.round(Number(loan.total) || 0)).indexOf(qd) >= 0) return true;
+        }
+        var qa = q.replace(/[^0-9.]/g, "");
+        if (qa && qa !== qd && String(Number(loan.amount)).indexOf(qa) >= 0) return true;
+        return false;
+      }
+      function viewPrestamos() {
+        var html = '<div class="view-head"><h2>Préstamos</h2>' +
+          '<button class="btn small" data-action="new-loan">+ Nuevo</button></div>';
+        if (liveLoans().length === 0) {
+          html += '<div class="empty"><strong>Sin préstamos todavía</strong>Crea un préstamo y la app genera el plan de cuotas automáticamente.</div>';
+          return html;
+        }
+        html += '<input class="search" id="loanSearch" type="search" placeholder="Buscar por cliente, teléfono, cédula o monto…" value="' + esc(loanSearch) + '" />';
+        var list = liveLoans().slice();
+        if (loanSearch.trim()) {
+          var q = loanSearch.trim();
+          list = list.filter(function (l) { return loanMatchesSearch(l, q); });
+        }
+        // Del más reciente al más viejo; los que no tienen fecha de creación quedan al final
+        list.sort(function (a, b) {
+          var ka = loanCreatedKey(a), kb = loanCreatedKey(b);
+          if (ka && kb) return ka < kb ? 1 : ka > kb ? -1 : 0;
+          if (ka) return -1;
+          if (kb) return 1;
+          return 0;
+        });
+        if (list.length === 0) {
+          html += '<div class="empty">Ningún préstamo coincide con la búsqueda.</div>';
+        } else {
+          list.forEach(function (loan) { html += loanCard(loan, true); });
+        }
+        return html;
+      }
+      function viewLoanDetail(id) {
+        var loan = loanById(id);
+        if (!loan) { detail = null; return viewPrestamos(); }
+        var c = clientById(loan.clientId);
+        var st = loanStatus(loan);
+        var states = installmentStates(loan);
+        var html = '<button class="back-btn" data-action="back-prestamos">← Préstamos</button>';
+        html += '<div class="row" style="margin-bottom:14px"><div class="grow">' +
+          '<div class="name" style="font-size:20px">' + esc(c ? c.name : "Cliente") + "</div>" +
+          '<div class="sub">Préstamo del ' + fmtDate(loan.startDate) + '</div></div>' +
+          '<span class="chip ' + st.chip + '">' + st.label + "</span></div>";
+        html += '<div class="card">' +
+          kv("Monto prestado", money(loan.amount)) +
+          kv("Cuota", money(loanCuota(loan)) + " × " + (typeof loan.count === "number" ? loan.count : loan.installments.length)) +
+          kv("Interés total", money(loanInterestAmount(loan)) + " (" + loanInterestPct(loan) + "%)") +
+          kv("Total a pagar", money(loan.total)) +
+          kv("Pagado", money(loanPaid(loan))) +
+          kv("Saldo pendiente", money(loanBalance(loan))) +
+          kv("Frecuencia", freqLabel(loan.frequency)) + "</div>";
+        if (loanBalance(loan) > 0) {
+          html += '<div class="btn-row"><button class="btn" data-action="new-payment" data-id="' + esc(loan.id) + '">Registrar pago</button>' +
+            '<button class="btn ghost" data-action="edit-loan" data-id="' + esc(loan.id) + '">Editar</button></div>' +
+            '<div class="btn-row"><button class="btn ghost" data-action="loan-report" data-id="' + esc(loan.id) + '">Reporte para cliente</button>' +
+            '<button class="btn ghost" data-action="delete-loan" data-id="' + esc(loan.id) + '" style="color:var(--danger)">Eliminar préstamo</button></div>';
+        } else {
+          html += '<div class="btn-row"><button class="btn" data-action="loan-report" data-id="' + esc(loan.id) + '">Reporte para cliente</button>' +
+            '<button class="btn ghost" data-action="edit-loan" data-id="' + esc(loan.id) + '">Editar</button></div>' +
+            '<div class="btn-row"><button class="btn ghost" data-action="delete-loan" data-id="' + esc(loan.id) + '" style="color:var(--danger)">Eliminar préstamo</button></div>';
+        }
+        html += '<div class="section-title">Plan de cuotas</div><div class="card" style="padding-top:4px;padding-bottom:4px">';
+        states.forEach(function (s) {
+          var cls = s.status === "pagada" ? "paid" : s.status === "vencida" ? "overdue" : "";
+          var right = s.status === "pagada"
+            ? '<span class="chip green">Pagada</span>'
+            : s.status === "vencida"
+              ? '<span class="chip red">Vencida</span>'
+              : '<span class="chip gray">' + fmtDate(s.due) + "</span>";
+          html += '<div class="installment ' + cls + '"><div class="n">' + s.n + "</div>" +
+            '<div class="grow"><div style="font-weight:600">' + money(s.amount) +
+            (s.frac ? ' <span class="chip blue">MEDIA CUOTA</span>' : "") + "</div>" +
+            '<div class="sub">Vence ' + fmtDate(s.due) +
+            (s.covered > 0 && s.status !== "pagada" ? " · abonado " + money(s.covered) : "") +
+            "</div></div>" + right + "</div>";
+        });
+        html += "</div>";
+        var pays = loanPayments(loan.id);
+        html += '<div class="section-title">Pagos registrados</div>';
+        if (pays.length === 0) {
+          html += '<div class="empty">Aún no hay pagos registrados en este préstamo.</div>';
+        } else {
+          html += '<div class="card" style="padding-top:4px;padding-bottom:4px">';
+          pays.slice().reverse().forEach(function (p) {
+            html += '<div class="installment"><div class="grow"><div style="font-weight:600">' + money(p.amount) + "</div>" +
+              '<div class="sub">' + fmtDate(p.date) + (p.note ? " · " + esc(p.note) : "") + "</div></div>" +
+              '<button class="btn ghost small" data-action="receipt" data-id="' + esc(p.id) + '">Recibo</button>' +
+              '<button class="btn ghost small" data-action="delete-payment" data-id="' + esc(p.id) + '" style="color:var(--danger)">Borrar</button></div>';
+          });
+          html += "</div>";
+        }
+        return html;
+      }
+
+      /* ================= Vista: Ganancias ================= */
+      function monthKey(iso) { return String(iso || "").slice(0, 7); }
+      function monthLabel(mk) {
+        var p = String(mk).split("-");
+        var d = new Date(Number(p[0]), Number(p[1]) - 1, 1);
+        var s = new Intl.DateTimeFormat("es-DO", { month: "long", year: "numeric" }).format(d);
+        return s.charAt(0).toUpperCase() + s.slice(1);
+      }
+      // Interés ganado del mes: parte proporcional de interés de cada pago recibido en el mes
+      function gananciasStats(mk) {
+        var prestado = 0, cobrado = 0, interes = 0;
+        liveLoans().forEach(function (loan) {
+          if (monthKey(loan.startDate) === mk) prestado += Number(loan.amount);
+        });
+        livePayments().forEach(function (p) {
+          if (monthKey(p.date) !== mk) return;
+          cobrado += Number(p.amount);
+          var loan = loanById(p.loanId);
+          if (loan && Number(loan.total) > 0) {
+            interes += Number(p.amount) * ((Number(loan.total) - Number(loan.amount)) / Number(loan.total));
+          }
+        });
+        var activos = liveLoans().filter(function (l) { return loanBalance(l) > 0; }).length;
+        return { prestado: round2(prestado), cobrado: round2(cobrado), interes: round2(interes), activos: activos };
+      }
+      function viewGanancias() {
+        var s = gananciasStats(gananciasMonth);
+        var html = "<h2 style='margin:0 0 16px;font-size:22px;letter-spacing:-0.02em;'>Ganancias</h2>";
+        html += '<div class="field"><label for="gananciasMonth">Mes</label>' +
+          '<input id="gananciasMonth" type="month" value="' + esc(gananciasMonth) + '" /></div>';
+        html += '<div class="grid2">' +
+          statCard("Prestado en el mes", money(s.prestado), "blue") +
+          statCard("Cobrado en el mes", money(s.cobrado), "green") +
+          statCard("Intereses ganados", money(s.interes), "green") +
+          statCard("Préstamos activos", String(s.activos), "") +
+          "</div>";
+        html += '<button class="btn block" data-action="ganancias-pdf">Descargar reporte de ' + esc(monthLabel(gananciasMonth)) + " (PDF)</button>";
+        html += '<div class="note-box" style="margin-top:14px">Los <strong>intereses ganados</strong> se calculan como la parte proporcional de interés de cada pago recibido en el mes seleccionado.</div>';
+
+        var loansMes = liveLoans().filter(function (l) { return monthKey(l.startDate) === gananciasMonth; })
+          .sort(function (a, b) { return a.startDate < b.startDate ? -1 : 1; });
+        html += '<div class="section-title">Préstamos del mes</div>';
+        if (loansMes.length === 0) {
+          html += '<div class="empty">No se otorgaron préstamos en este mes.</div>';
+        } else {
+          loansMes.forEach(function (loan) { html += loanCard(loan, true); });
+        }
+        var paysMes = livePayments().filter(function (p) { return monthKey(p.date) === gananciasMonth; })
+          .sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+        html += '<div class="section-title">Pagos recibidos en el mes</div>';
+        if (paysMes.length === 0) {
+          html += '<div class="empty">No se recibieron pagos en este mes.</div>';
+        } else {
+          html += '<div class="card" style="padding-top:4px;padding-bottom:4px">';
+          paysMes.slice().reverse().forEach(function (p) {
+            var loan = loanById(p.loanId);
+            var c = loan ? clientById(loan.clientId) : null;
+            html += '<div class="installment"><div class="grow"><div style="font-weight:600">' + money(p.amount) + "</div>" +
+              '<div class="sub">' + fmtDate(p.date) + " · " + esc(c ? c.name : "Cliente") + (p.note ? " · " + esc(p.note) : "") + "</div></div></div>";
+          });
+          html += "</div>";
+        }
+        return html;
+      }
+
+      /* ================= Vista: Respaldo ================= */
+      function viewAjustes() {
+        var html = "<h2 style='margin:0 0 16px;font-size:22px;letter-spacing:-0.02em;'>Respaldo de datos</h2>";
+        html += '<div class="note-box"><strong>Tus datos se guardan en este teléfono</strong> (clientes: ' + liveClients().length +
+          ", préstamos: " + liveLoans().length + ", pagos: " + livePayments().length +
+          "). Si limpias los datos del navegador o cambias de teléfono, se pierden. Descarga el respaldo en JSON de vez en cuando y guárdalo en un lugar seguro: es el archivo que podrás volver a importar aquí. También puedes descargar el reporte en PDF o en Excel para consultarlo, imprimirlo o compartirlo.</div>";
+        html += '<div class="card"><div class="name" style="margin-bottom:4px">Exportar respaldo</div>' +
+          '<div class="sub" style="margin-bottom:12px">JSON: respaldo completo, el único que se puede volver a importar. PDF y Excel: reporte con clientes, préstamos, cuotas y pagos.</div>' +
+          '<button class="btn block" data-action="export">Descargar respaldo (JSON)</button>' +
+          '<div class="btn-row"><button class="btn ghost" data-action="export-pdf">Descargar PDF</button>' +
+          '<button class="btn ghost" data-action="export-xlsx">Descargar Excel</button></div></div>';
+        html += '<div class="card"><div class="name" style="margin-bottom:4px">Importar respaldo</div>' +
+          '<div class="sub" style="margin-bottom:12px">Carga un archivo de respaldo. Esto reemplaza todos los datos actuales.</div>' +
+          '<label class="btn ghost block" for="importFile" style="text-align:center">Elegir archivo JSON</label>' +
+          '<input id="importFile" type="file" accept=".json,application/json" class="hidden" /></div>';
+        var cfgS = syncCfg();
+        var syncStatusHtml;
+        if (syncUi.msg) {
+          syncStatusHtml = '<span style="color:' + (syncUi.kind === "error" ? "var(--danger)" : "var(--ok)") + '">' + esc(syncUi.msg) + "</span>";
+        } else if (cfgS.enabled) {
+          syncStatusHtml = cfgS.lastSync ? "Última sincronización: " + esc(fmtDateTime(cfgS.lastSync)) : "Activada · Nunca sincronizado todavía";
+        } else if (cfgS.url) {
+          syncStatusHtml = cfgS.lastSync ? "Desactivada · Última sincronización: " + esc(fmtDateTime(cfgS.lastSync)) : "Desactivada · Nunca sincronizado";
+        } else {
+          syncStatusHtml = "Nunca sincronizado";
+        }
+        html += '<div class="card"><div class="name" style="margin-bottom:4px">Sincronización en la nube</div>' +
+          '<div class="sub" style="margin-bottom:12px">Estado: <strong>' + syncStatusHtml + '</strong></div>' +
+          '<div class="field"><label for="syncUrl">URL del proyecto Supabase</label>' +
+          '<input id="syncUrl" type="url" inputmode="url" autocapitalize="none" autocomplete="off" placeholder="https://tu-proyecto.supabase.co" value="' + esc(cfgS.url || "") + '" /></div>' +
+          '<div class="field"><label for="syncKey">Clave anónima (anon key)</label>' +
+          '<input id="syncKey" type="password" autocapitalize="none" autocomplete="off" placeholder="Clave pública anónima del proyecto" value="' + esc(cfgS.anonKey || "") + '" /></div>' +
+          '<button class="btn block" data-action="sync-activate">Probar y activar</button>' +
+          '<div class="btn-row"><button class="btn ghost" data-action="sync-now">Sincronizar ahora</button>' +
+          '<button class="btn ghost" data-action="sync-off" style="color:var(--danger)">Desactivar</button></div>' +
+          '<div class="sub" style="margin-top:12px;line-height:1.6">Al activarla, la app sincroniza sola al abrirse y unos segundos después de cada cambio. Tus datos se cifran con tu contraseña antes de subir: en Supabase solo se guarda una fila con el texto cifrado. En el otro teléfono abre esta misma pestaña, escribe la misma URL y la misma clave, y activa con la misma contraseña de la app.</div></div>';
+        html += '<div class="note-box"><strong>Primera vez: crea la tabla en Supabase.</strong> En tu proyecto abre <strong>SQL Editor</strong>, pega este código y ejecútalo:' +
+          '<span style="display:block;white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--ink);margin:10px 0">create table nova_sync (\n  id text primary key,\n  payload text not null,\n  updated_at timestamptz not null default now()\n);</span>' +
+          'La URL y la clave anónima están en <strong>Project Settings → API</strong> de tu proyecto. Si la tabla tiene RLS activado, agrega una política que permita leer y escribir con la clave anónima.</div>';
+        if (webauthnSupported()) {
+          if (faceIdRegistered()) {
+            html += '<div class="card"><div class="name" style="margin-bottom:4px">Face ID</div>' +
+              '<div class="sub" style="margin-bottom:12px">Face ID está activado en este dispositivo: puedes entrar con tu rostro desde la pantalla de inicio de sesión.</div>' +
+              '<button class="btn ghost block" data-action="faceid-off" style="color:var(--danger)">Desactivar Face ID</button></div>';
+          } else {
+            html += '<div class="card"><div class="name" style="margin-bottom:4px">Face ID</div>' +
+              '<div class="sub" style="margin-bottom:12px">Activa Face ID para entrar con tu rostro sin escribir la contraseña. Tu contraseña seguirá funcionando como respaldo.</div>' +
+              '<button class="btn block" data-action="faceid-on">Activar Face ID</button></div>';
+          }
+        }
+        html += '<div class="btn-row"><button class="btn ghost" data-action="logout">Cerrar sesión</button></div>';
+        return html;
+      }
+
+      /* ================= Modales y formularios ================= */
+      function openModal(html) {
+        document.getElementById("modalRoot").innerHTML =
+          '<div class="modal-backdrop" id="modalBackdrop"><div class="modal">' + html + "</div></div>";
+        document.getElementById("modalBackdrop").addEventListener("click", function (ev) {
+          if (ev.target.id === "modalBackdrop") closeModal();
+        });
+      }
+      function closeModal() { document.getElementById("modalRoot").innerHTML = ""; }
+      function modalButtons(submitLabel) {
+        return '<div class="btn-row"><button type="button" class="btn ghost" data-close>Cancelar</button>' +
+          '<button type="submit" class="btn">' + esc(submitLabel) + "</button></div>";
+      }
+      function bindModalCommon(form) {
+        form.querySelectorAll("[data-close]").forEach(function (b) {
+          b.addEventListener("click", closeModal);
+        });
+      }
+
+      function openClientForm(client) {
+        var isEdit = !!client;
+        client = client || {};
+        openModal(
+          "<h3>" + (isEdit ? "Editar cliente" : "Nuevo cliente") + "</h3>" +
+          '<form id="clientForm">' +
+          '<div class="field"><label for="cf-name">Nombre *</label><input id="cf-name" required value="' + esc(client.name || "") + '" /></div>' +
+          '<div class="field"><label for="cf-phone">Teléfono</label><input id="cf-phone" type="tel" value="' + esc(client.phone || "") + '" /></div>' +
+          '<div class="field"><label for="cf-cedula">Cédula</label><input id="cf-cedula" value="' + esc(client.cedula || "") + '" /></div>' +
+          '<div class="field"><label for="cf-address">Dirección</label><input id="cf-address" value="' + esc(client.address || "") + '" /></div>' +
+          '<div class="field"><label for="cf-notes">Notas</label><textarea id="cf-notes">' + esc(client.notes || "") + "</textarea></div>" +
+          modalButtons(isEdit ? "Guardar cambios" : "Agregar cliente") +
+          "</form>"
+        );
+        var form = document.getElementById("clientForm");
+        bindModalCommon(form);
+        form.addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var values = {
+            name: document.getElementById("cf-name").value.trim(),
+            phone: document.getElementById("cf-phone").value.trim(),
+            cedula: document.getElementById("cf-cedula").value.trim(),
+            address: document.getElementById("cf-address").value.trim(),
+            notes: document.getElementById("cf-notes").value.trim()
+          };
+          if (!values.name) return;
+          if (isEdit) {
+            var target = clientById(client.id);
+            if (target) {
+              Object.assign(target, values);
+              target.updatedAt = new Date().toISOString();
+            }
+            toast("Cliente actualizado.");
+          } else {
+            values.id = uid();
+            values.updatedAt = new Date().toISOString();
+            data.clients.push(values);
+            toast("Cliente agregado.");
+          }
+          saveData();
+          closeModal();
+          render();
+        });
+        document.getElementById("cf-name").focus({ preventScroll: true });
+      }
+
+      // Plan de cuotas: count puede ser decimal (ej.: 6.5). Las cuotas completas van por el
+      // monto completo y, si hay fracción, la última es proporcional (media cuota) y queda
+      // marcada con frac:true para etiquetarla "MEDIA CUOTA". Su monto se deriva del total
+      // para que la suma del plan sea exactamente cuota × count.
+      function buildSchedule(cuota, count, freq, startDate) {
+        var cuotaR = round2(cuota);
+        var total = round2(cuotaR * count);
+        var installments = [];
+        var due = startDate;
+        var full = Math.floor(count);
+        var frac = round2(count - full);
+        var n = 0;
+        for (var i = 0; i < full; i++) {
+          n++;
+          installments.push({ n: n, due: due, amount: cuotaR });
+          due = addPeriod(due, freq);
+        }
+        if (frac > 0) {
+          n++;
+          installments.push({ n: n, due: due, amount: round2(total - cuotaR * full), frac: true });
+        }
+        return { total: total, installments: installments };
+      }
+
+      function openLoanForm(presetClientId) {
+        if (liveClients().length === 0) {
+          openModal("<h3>Primero agrega un cliente</h3><p style='color:var(--muted);line-height:1.6'>Para crear un préstamo necesitas al menos un cliente registrado.</p>" +
+            '<div class="btn-row"><button class="btn ghost" data-close>Cancelar</button>' +
+            '<button class="btn" id="goNewClient">Agregar cliente</button></div>');
+          document.querySelector("[data-close]").addEventListener("click", closeModal);
+          document.getElementById("goNewClient").addEventListener("click", function () { openClientForm(null); });
+          return;
+        }
+        var options = liveClients().slice().sort(function (a, b) { return a.name.localeCompare(b.name); })
+          .map(function (c) {
+            return '<option value="' + esc(c.id) + '"' + (c.id === presetClientId ? " selected" : "") + ">" + esc(c.name) + "</option>";
+          }).join("");
+        openModal(
+          "<h3>Nuevo préstamo</h3>" +
+          '<form id="loanForm">' +
+          '<div class="field"><label for="lf-client">Cliente</label><select id="lf-client">' + options + "</select></div>" +
+          '<div class="field"><label for="lf-amount">Monto del préstamo (RD$) *</label><input id="lf-amount" type="text" required inputmode="decimal" placeholder="Ej.: 30,000" /></div>' +
+          '<div class="field"><label for="lf-cuota">Monto de la cuota (RD$) *</label><input id="lf-cuota" type="text" required inputmode="decimal" placeholder="Ej.: 5,500" /></div>' +
+          '<div class="field"><label for="lf-count">Número de cuotas *</label><input id="lf-count" type="number" min="0.5" step="any" required inputmode="decimal" placeholder="Ej.: 10 o 6.5" /></div>' +
+          '<div class="field"><label for="lf-freq">Frecuencia</label><select id="lf-freq">' +
+          '<option value="semanal">Semanal</option><option value="quincenal">Quincenal</option><option value="mensual">Mensual</option></select></div>' +
+          '<div class="field"><label for="lf-start">Fecha de la primera cuota</label><input id="lf-start" type="date" value="' + todayISO() + '" required /></div>' +
+          '<div class="preview" id="lf-preview">Completa el monto, la cuota y el número de cuotas para ver el plan.</div>' +
+          modalButtons("Crear préstamo") + "</form>"
+        );
+        var form = document.getElementById("loanForm");
+        bindModalCommon(form);
+        function updatePreview() {
+          var amount = parseMoneyVal(document.getElementById("lf-amount").value);
+          var cuota = parseMoneyVal(document.getElementById("lf-cuota").value);
+          var count = parseFloat(document.getElementById("lf-count").value);
+          var box = document.getElementById("lf-preview");
+          if (amount > 0 && cuota > 0 && count >= 0.5) {
+            var total = round2(cuota * count);
+            var interes = round2(total - amount);
+            var pct = round2((interes / amount) * 100);
+            var full = Math.floor(count);
+            var frac = round2(count - full);
+            var planTxt = "";
+            if (frac > 0) {
+              var lastAmt = round2(total - round2(cuota) * full);
+              planTxt = "<br>Plan: " + (full > 0
+                ? full + (full === 1 ? " cuota de " : " cuotas de ") + money(cuota) + " y una <strong>media cuota</strong> final de " + money(lastAmt)
+                : "una <strong>media cuota</strong> de " + money(lastAmt));
+            }
+            box.innerHTML = "Total a pagar: <strong>" + money(total) + "</strong> (" + money(cuota) + " × " + count + " cuotas)<br>" +
+              "Interés total: <strong>" + money(interes) + "</strong> (" + pct + "%)" + planTxt;
+          } else {
+            box.textContent = "Completa el monto, la cuota y el número de cuotas para ver el plan.";
+          }
+        }
+        attachMoneyFormat(document.getElementById("lf-amount"));
+        attachMoneyFormat(document.getElementById("lf-cuota"));
+        ["lf-amount", "lf-cuota", "lf-count"].forEach(function (id) {
+          document.getElementById(id).addEventListener("input", updatePreview);
+        });
+        form.addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var amount = parseMoneyVal(document.getElementById("lf-amount").value);
+          var cuota = parseMoneyVal(document.getElementById("lf-cuota").value);
+          var count = parseFloat(document.getElementById("lf-count").value);
+          var freq = document.getElementById("lf-freq").value;
+          var start = document.getElementById("lf-start").value || todayISO();
+          if (!(amount > 0) || !(cuota > 0) || !(count >= 0.5)) return;
+          var sched = buildSchedule(cuota, count, freq, start);
+          data.loans.push({
+            id: uid(),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            clientId: document.getElementById("lf-client").value,
+            amount: round2(amount),
+            cuota: round2(cuota),
+            count: count,
+            total: sched.total,
+            frequency: freq,
+            startDate: start,
+            installments: sched.installments
+          });
+          saveData();
+          closeModal();
+          toast("Préstamo creado con " + count + " cuotas.");
+          setTab("prestamos");
+        });
+      }
+
+      // Editar un préstamo existente: mismo formulario que al crearlo, ya lleno con sus
+      // datos actuales. Al guardar se regenera el plan con buildSchedule y se actualiza
+      // el mismo registro (id, cliente, fecha de creación y pagos se conservan).
+      // Protección: el nuevo total (cuota × cuotas) no puede ser menor que lo ya pagado.
+      function openLoanEditForm(loan) {
+        var c = clientById(loan.clientId);
+        var pagado = loanPaid(loan);
+        var countVal = typeof loan.count === "number" ? loan.count : loan.installments.length;
+        var freqOpts = ["semanal", "quincenal", "mensual"].map(function (f) {
+          return '<option value="' + f + '"' + (loan.frequency === f ? " selected" : "") + ">" + freqLabel(f) + "</option>";
+        }).join("");
+        openModal(
+          "<h3>Editar préstamo</h3>" +
+          '<div class="preview">Cliente: <strong>' + esc(c ? c.name : "Cliente") + "</strong>" +
+          (pagado > 0 ? "<br>Ya pagado: <strong>" + money(pagado) + "</strong> · Los pagos registrados se conservan." : "") + "</div>" +
+          '<form id="editLoanForm">' +
+          '<div class="field"><label for="ef-amount">Monto del préstamo (RD$) *</label><input id="ef-amount" type="text" required inputmode="decimal" value="' + esc(moneyInputValue(loan.amount)) + '" /></div>' +
+          '<div class="field"><label for="ef-cuota">Monto de la cuota (RD$) *</label><input id="ef-cuota" type="text" required inputmode="decimal" value="' + esc(moneyInputValue(loanCuota(loan))) + '" /></div>' +
+          '<div class="field"><label for="ef-count">Número de cuotas *</label><input id="ef-count" type="number" min="0.5" step="any" required inputmode="decimal" value="' + countVal + '" /></div>' +
+          '<div class="field"><label for="ef-freq">Frecuencia</label><select id="ef-freq">' + freqOpts + "</select></div>" +
+          '<div class="field"><label for="ef-start">Fecha de la primera cuota</label><input id="ef-start" type="date" value="' + esc(loan.startDate) + '" required /></div>' +
+          '<div class="preview" id="ef-preview"></div>' +
+          '<div class="form-error hidden" id="ef-error">El nuevo total no puede ser menor que lo ya pagado (' + money(pagado) + ").</div>" +
+          modalButtons("Guardar cambios") + "</form>"
+        );
+        var form = document.getElementById("editLoanForm");
+        bindModalCommon(form);
+        function readValues() {
+          return {
+            amount: parseMoneyVal(document.getElementById("ef-amount").value),
+            cuota: parseMoneyVal(document.getElementById("ef-cuota").value),
+            count: parseFloat(document.getElementById("ef-count").value),
+            freq: document.getElementById("ef-freq").value,
+            start: document.getElementById("ef-start").value || loan.startDate
+          };
+        }
+        function updatePreview() {
+          var v = readValues();
+          var box = document.getElementById("ef-preview");
+          var err = document.getElementById("ef-error");
+          if (v.amount > 0 && v.cuota > 0 && v.count >= 0.5) {
+            var sched = buildSchedule(v.cuota, v.count, v.freq, v.start);
+            var interes = round2(sched.total - v.amount);
+            var pct = round2((interes / v.amount) * 100);
+            var full = Math.floor(v.count);
+            var frac = round2(v.count - full);
+            var planTxt = "";
+            if (frac > 0) {
+              var lastAmt = round2(sched.total - round2(v.cuota) * full);
+              planTxt = "<br>Plan: " + (full > 0
+                ? full + (full === 1 ? " cuota de " : " cuotas de ") + money(v.cuota) + " y una <strong>media cuota</strong> final de " + money(lastAmt)
+                : "una <strong>media cuota</strong> de " + money(lastAmt));
+            }
+            box.innerHTML = "Total a pagar: <strong>" + money(sched.total) + "</strong> (" + money(v.cuota) + " × " + v.count + " cuotas)<br>" +
+              "Interés total: <strong>" + money(interes) + "</strong> (" + pct + "%)" + planTxt;
+            err.classList.toggle("hidden", !(pagado > 0 && sched.total < pagado));
+          } else {
+            box.textContent = "Completa el monto, la cuota y el número de cuotas para ver el plan.";
+            err.classList.add("hidden");
+          }
+        }
+        attachMoneyFormat(document.getElementById("ef-amount"));
+        attachMoneyFormat(document.getElementById("ef-cuota"));
+        ["ef-amount", "ef-cuota", "ef-count"].forEach(function (id) {
+          document.getElementById(id).addEventListener("input", updatePreview);
+        });
+        document.getElementById("ef-freq").addEventListener("change", updatePreview);
+        document.getElementById("ef-start").addEventListener("change", updatePreview);
+        updatePreview();
+        form.addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var v = readValues();
+          if (!(v.amount > 0) || !(v.cuota > 0) || !(v.count >= 0.5)) return;
+          var sched = buildSchedule(v.cuota, v.count, v.freq, v.start);
+          if (pagado > 0 && sched.total < pagado) {
+            document.getElementById("ef-error").classList.remove("hidden");
+            return;
+          }
+          openModal(
+            "<h3>Confirmar cambios</h3>" +
+            "<p style='color:var(--muted);line-height:1.6'>Al guardar, el plan de cuotas, el saldo, la mora y los documentos de este préstamo se recalcularán con las nuevas condiciones. Los pagos ya registrados se conservan.</p>" +
+            '<div class="preview">Nuevo total: <strong>' + money(sched.total) + "</strong>" +
+            (pagado > 0 ? "<br>Ya pagado: <strong>" + money(pagado) + "</strong> · Nuevo saldo: <strong>" + money(round2(sched.total - pagado)) + "</strong>" : "") + "</div>" +
+            '<div class="btn-row"><button type="button" class="btn ghost" data-close>Cancelar</button>' +
+            '<button type="button" class="btn" id="ef-confirm">Guardar cambios</button></div>'
+          );
+          document.querySelector("[data-close]").addEventListener("click", closeModal);
+          document.getElementById("ef-confirm").addEventListener("click", function () {
+            var target = loanById(loan.id);
+            if (target) {
+              target.amount = round2(v.amount);
+              target.cuota = round2(v.cuota);
+              target.count = v.count;
+              target.total = sched.total;
+              target.frequency = v.freq;
+              target.startDate = v.start;
+              target.installments = sched.installments;
+              target.updatedAt = new Date().toISOString();
+              saveData();
+            }
+            closeModal();
+            toast("Préstamo actualizado.");
+            render();
+          });
+        });
+      }
+
+      function openPaymentForm(loan) {
+        var nd = nextDue(loan);
+        var suggested = nd ? round2(nd.amount - nd.covered) : loanBalance(loan);
+        openModal(
+          "<h3>Registrar pago</h3>" +
+          '<form id="payForm">' +
+          '<div class="preview">Saldo pendiente: <strong>' + money(loanBalance(loan)) + "</strong>" +
+          (nd ? "<br>Próxima cuota: #" + nd.n + " · " + fmtDate(nd.due) : "") + "</div>" +
+          '<div class="form-error hidden" id="pf-error"></div>' +
+          '<div class="field"><label for="pf-amount">Monto (RD$) *</label><input id="pf-amount" type="text" required inputmode="decimal" value="' + moneyInputValue(suggested) + '" /></div>' +
+          '<div class="field"><label for="pf-date">Fecha</label><input id="pf-date" type="date" value="' + todayISO() + '" required /></div>' +
+          '<div class="field"><label for="pf-note">Nota (opcional)</label><input id="pf-note" placeholder="Ej.: transferencia, efectivo…" /></div>' +
+          modalButtons("Guardar pago") + "</form>"
+        );
+        var form = document.getElementById("payForm");
+        bindModalCommon(form);
+        attachMoneyFormat(document.getElementById("pf-amount"));
+        form.addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var amount = parseMoneyVal(document.getElementById("pf-amount").value);
+          if (!(amount > 0)) return;
+          // Protección contra sobrepagos: no guardar un pago mayor que el saldo pendiente
+          var saldo = loanBalance(loan);
+          if (round2(amount) > saldo) {
+            var errBox = document.getElementById("pf-error");
+            errBox.textContent = "El monto supera el saldo pendiente de " + money(saldo) + ".";
+            errBox.classList.remove("hidden");
+            return;
+          }
+          data.payments.push({
+            id: uid(), loanId: loan.id, amount: round2(amount),
+            updatedAt: new Date().toISOString(),
+            date: document.getElementById("pf-date").value || todayISO(),
+            note: document.getElementById("pf-note").value.trim()
+          });
+          saveData();
+          closeModal();
+          toast(loanBalance(loan) <= 0 ? "¡Préstamo saldado!" : "Pago registrado.");
+          render();
+        });
+        document.getElementById("pf-amount").focus({ preventScroll: true });
+      }
+
+      function openConfirm(title, message, okLabel, onOk) {
+        openModal("<h3>" + esc(title) + "</h3><p style='color:var(--muted);line-height:1.6'>" + esc(message) + "</p>" +
+          '<div class="btn-row"><button class="btn ghost" data-close>Cancelar</button>' +
+          '<button class="btn danger" id="confirmOk">' + esc(okLabel) + "</button></div>");
+        document.querySelector("[data-close]").addEventListener("click", closeModal);
+        document.getElementById("confirmOk").addEventListener("click", function () {
+          closeModal();
+          onOk();
+        });
+      }
+
+      /* ================= Acciones ================= */
+      var mainBound = false;
+      function bindView(main) {
+        main.querySelectorAll("[data-open-loan],[data-open-client]").forEach(function (el) {
+          el.setAttribute("role", "button");
+          el.setAttribute("tabindex", "0");
+        });
+        var search = document.getElementById("clientSearch");
+        if (search) {
+          search.addEventListener("input", function () {
+            clientSearch = search.value;
+            var pos = search.selectionStart;
+            render();
+            var again = document.getElementById("clientSearch");
+            if (again) { again.focus({ preventScroll: true }); again.setSelectionRange(pos, pos); }
+          });
+        }
+        var loanSearchEl = document.getElementById("loanSearch");
+        if (loanSearchEl) {
+          loanSearchEl.addEventListener("input", function () {
+            loanSearch = loanSearchEl.value;
+            var pos = loanSearchEl.selectionStart;
+            render();
+            var againL = document.getElementById("loanSearch");
+            if (againL) { againL.focus({ preventScroll: true }); againL.setSelectionRange(pos, pos); }
+          });
+        }
+        var importInput = document.getElementById("importFile");
+        if (importInput) importInput.addEventListener("change", handleImport);
+        var gmInput = document.getElementById("gananciasMonth");
+        if (gmInput) {
+          gmInput.addEventListener("change", function () {
+            if (!gmInput.value) return;
+            gananciasMonth = gmInput.value;
+            // Misma pantalla fija que en Clientes: al re-renderizar por el filtro,
+            // la vista no salta — se conserva la posición de desplazamiento
+            // dentro del contenedor y el foco vuelve al campo sin desplazar.
+            var mainEl = document.getElementById("mainView");
+            var prevScroll = mainEl ? mainEl.scrollTop : 0;
+            render();
+            var mainAfter = document.getElementById("mainView");
+            if (mainAfter) mainAfter.scrollTop = prevScroll;
+            var againGm = document.getElementById("gananciasMonth");
+            if (againGm) againGm.focus({ preventScroll: true });
+          });
+        }
+
+        if (mainBound) return;
+        mainBound = true;
+        main.addEventListener("keydown", function (ev) {
+          if ((ev.key === "Enter" || ev.key === " ") && ev.target.matches("[data-open-loan],[data-open-client]")) {
+            ev.preventDefault();
+            ev.target.click();
+          }
+        });
+        main.addEventListener("click", function (ev) {
+          var openClient = ev.target.closest("[data-open-client]");
+          if (openClient) { detail = { type: "client", id: openClient.getAttribute("data-open-client") }; render(); return; }
+          var openLoan = ev.target.closest("[data-open-loan]");
+          if (openLoan) { detail = { type: "loan", id: openLoan.getAttribute("data-open-loan") }; render(); return; }
+          var el = ev.target.closest("[data-action]");
+          if (!el) return;
+          var action = el.getAttribute("data-action");
+          var id = el.getAttribute("data-id");
+          if (action === "new-client") openClientForm(null);
+          else if (action === "edit-client") openClientForm(clientById(id));
+          else if (action === "delete-client") {
+            var c = clientById(id);
+            openConfirm("Eliminar cliente", "Se eliminará a " + (c ? c.name : "este cliente") + " junto con sus préstamos y pagos. Esta acción no se puede deshacer.", "Eliminar", function () {
+              var nowIso = new Date().toISOString();
+              var loanIds = data.loans.filter(function (l) { return l.clientId === id; }).map(function (l) { return l.id; });
+              data.clients.forEach(function (x) { if (x.id === id) { x.deleted = true; x.updatedAt = nowIso; } });
+              data.loans.forEach(function (l) { if (l.clientId === id) { l.deleted = true; l.updatedAt = nowIso; } });
+              data.payments.forEach(function (p) { if (loanIds.indexOf(p.loanId) >= 0) { p.deleted = true; p.updatedAt = nowIso; } });
+              saveData(); detail = null; currentTab = "clientes"; render();
+              toast("Cliente eliminado.");
+            });
+          }
+          else if (action === "new-loan") openLoanForm(null);
+          else if (action === "new-loan-for") openLoanForm(id);
+          else if (action === "delete-loan") {
+            openConfirm("Eliminar préstamo", "Se eliminará el préstamo y todos sus pagos registrados. Esta acción no se puede deshacer.", "Eliminar", function () {
+              var nowIso = new Date().toISOString();
+              data.payments.forEach(function (p) { if (p.loanId === id) { p.deleted = true; p.updatedAt = nowIso; } });
+              data.loans.forEach(function (l) { if (l.id === id) { l.deleted = true; l.updatedAt = nowIso; } });
+              saveData(); detail = null; currentTab = "prestamos"; render();
+              toast("Préstamo eliminado.");
+            });
+          }
+          else if (action === "edit-loan") { var editLoan = loanById(id); if (editLoan) openLoanEditForm(editLoan); }
+          else if (action === "new-payment") { var loan = loanById(id); if (loan) openPaymentForm(loan); }
+          else if (action === "delete-payment") {
+            data.payments.forEach(function (p) { if (p.id === id) { p.deleted = true; p.updatedAt = new Date().toISOString(); } });
+            saveData(); render(); toast("Pago eliminado.");
+          }
+          else if (action === "back-clientes") { detail = null; currentTab = "clientes"; render(); }
+          else if (action === "back-prestamos") { detail = null; currentTab = "prestamos"; render(); }
+          else if (action === "export") exportBackup();
+          else if (action === "export-pdf") exportPdf();
+          else if (action === "export-xlsx") exportXlsx();
+          else if (action === "receipt") { var pay = paymentById(id); if (pay) exportReceipt(pay); }
+          else if (action === "loan-report") { var repLoan = loanById(id); if (repLoan) exportLoanReport(repLoan); }
+          else if (action === "ganancias-pdf") exportGananciasPdf();
+          else if (action === "sync-activate") activateSync();
+          else if (action === "sync-now") {
+            if (!syncEnabled()) toast("Primero escribe la URL y la clave anónima y toca «Probar y activar».");
+            else syncNow({ silent: false });
+          }
+          else if (action === "sync-off") deactivateSync();
+          else if (action === "faceid-on") {
+            registerFaceId().then(function () {
+              render();
+              toast("Face ID activado en este dispositivo.");
+            }).catch(function () {
+              toast("No se pudo activar Face ID. Inténtalo de nuevo.");
+            });
+          }
+          else if (action === "faceid-off") {
+            openConfirm("Desactivar Face ID", "Se eliminará la llave de acceso de este dispositivo y volverás a entrar con tu contraseña. Podrás activar Face ID de nuevo cuando quieras.", "Desactivar", function () {
+              try { localStorage.removeItem(FACEID_KEY); } catch (e) {}
+              render();
+              toast("Face ID desactivado.");
+            });
+          }
+          else if (action === "logout") document.getElementById("logoutBtn").click();
+        });
+      }
+
+      /* ================= Respaldo JSON ================= */
+      function exportBackup() {
+        var payload = {
+          app: "inversiones-nova-prestamos",
+          version: 1,
+          exportedAt: new Date().toISOString(),
+          clients: data.clients, loans: data.loans, payments: data.payments
+        };
+        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "respaldo-nova-" + todayISO() + ".json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+        toast("Respaldo descargado.");
+      }
+
+      /* ================= Descarga genérica ================= */
+      function downloadBlob(blob, filename) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      }
+
+      /* ================= Reporte PDF (generador incluido en la app) ================= */
+      function pdfClean(s) {
+        return String(s == null ? "" : s)
+          .replace(/[‘’]/g, "'")
+          .replace(/[“”]/g, '"')
+          .replace(/[–—]/g, "-")
+          .replace(/…/g, "...")
+          .replace(/[  ]/g, " ")
+          .split("")
+          .map(function (ch) { return ch.charCodeAt(0) > 255 ? "?" : ch; })
+          .join("");
+      }
+      function pdfEsc(s) {
+        return pdfClean(s).replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+      }
+      function pdfCharW(font, size) { return size * (font === "F3" ? 0.6 : font === "F2" ? 0.54 : 0.5); }
+      function pdfWrap(text, font, size, maxWidth) {
+        var maxChars = Math.max(8, Math.floor(maxWidth / pdfCharW(font, size)));
+        var words = String(text).split(/\s+/);
+        var lines = [], cur = "";
+        words.forEach(function (w) {
+          while (w.length > maxChars) {
+            if (cur) { lines.push(cur); cur = ""; }
+            lines.push(w.slice(0, maxChars));
+            w = w.slice(maxChars);
+          }
+          if (!cur) cur = w;
+          else if ((cur + " " + w).length <= maxChars) cur += " " + w;
+          else { lines.push(cur); cur = w; }
+        });
+        if (cur || lines.length === 0) lines.push(cur);
+        return lines;
+      }
+      function reportLines() {
+        var L = [];
+        function add(text, font, size, gap, indent, color, keep) {
+          L.push({ text: String(text), font: font || "F1", size: size || 10.5, gap: gap || 0, indent: indent || 0, color: color || "", keep: keep || 0 });
+        }
+        function head(text) { add(text, "F2", 13.5, 14, 0, "", 70); L.push({ rule: true }); }
+        var totPrestado = 0, totTotal = 0, totCobrado = 0, totSaldo = 0, nActivos = 0, nMora = 0, nSaldados = 0;
+        liveLoans().forEach(function (loan) {
+          totPrestado += Number(loan.amount);
+          totTotal += Number(loan.total);
+          totCobrado += loanPaid(loan);
+          totSaldo += loanBalance(loan);
+          var k = loanStatus(loan).key;
+          if (k === "mora") nMora++;
+          else if (k === "saldado") nSaldados++;
+          else nActivos++;
+        });
+        L.push({ logo: true });
+        add("Inversiones Nova R & L", "F2", 19, 0);
+        add("Reporte de préstamos", "F1", 12.5, 2);
+        add("Generado el " + fmtDate(todayISO()) + " · " + liveClients().length + " clientes · " + liveLoans().length + " préstamos · " + livePayments().length + " pagos", "F1", 10, 1, 0, "0.4");
+        L.push({ rule: true });
+        head("Resumen");
+        add("Total prestado: " + money(totPrestado), "F1", 11, 2);
+        add("Total a cobrar (capital + interés): " + money(totTotal), "F1", 11, 2);
+        add("Total cobrado: " + money(totCobrado), "F1", 11, 2);
+        add("Saldo por cobrar: " + money(totSaldo), "F1", 11, 2);
+        add("Préstamos activos: " + nActivos + " · En mora: " + nMora + " · Saldados: " + nSaldados, "F1", 11, 2);
+        head("Clientes");
+        if (liveClients().length === 0) add("Sin clientes registrados.", "F1", 10.5, 2, 0, "0.4");
+        liveClients().slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).forEach(function (c) {
+          var loans = liveLoans().filter(function (l) { return l.clientId === c.id; });
+          var deuda = loans.reduce(function (s, l) { return s + loanBalance(l); }, 0);
+          add(c.name, "F2", 11.5, 8, 0, "", 44);
+          var det = [];
+          if (c.phone) det.push("Teléfono: " + c.phone);
+          if (c.cedula) det.push("Cédula: " + c.cedula);
+          det.push("Préstamos: " + loans.length);
+          det.push("Deuda actual: " + money(deuda));
+          add(det.join("  ·  "), "F1", 10.5, 1, 12);
+          if (c.address) add("Dirección: " + c.address, "F1", 10.5, 1, 12);
+          if (c.notes) add("Notas: " + c.notes, "F1", 10.5, 1, 12);
+        });
+        head("Préstamos");
+        if (liveLoans().length === 0) add("Sin préstamos registrados.", "F1", 10.5, 2, 0, "0.4");
+        liveLoans().forEach(function (loan) {
+          var c = clientById(loan.clientId);
+          var st = loanStatus(loan);
+          add((c ? c.name : "Cliente") + " — " + money(loan.amount) + " · " + freqLabel(loan.frequency) + " · " + st.label, "F2", 11.5, 10, 0, "", 60);
+          add("Inicio: " + fmtDate(loan.startDate) + " · Cuota: " + money(loanCuota(loan)) + " · Interés: " + money(loanInterestAmount(loan)) + " (" + loanInterestPct(loan) + "%) · Total a pagar: " + money(loan.total) +
+            " · Pagado: " + money(loanPaid(loan)) + " · Saldo: " + money(loanBalance(loan)), "F1", 10.5, 1, 12);
+          add("Cuotas:", "F1", 10.5, 3, 12);
+          installmentStates(loan).forEach(function (s) {
+            var estado = s.status === "pagada" ? "Pagada" : s.status === "vencida" ? "Vencida" : "Pendiente";
+            var extra = s.covered > 0 && s.status !== "pagada" ? " (abonado " + money(s.covered) + ")" : "";
+            add("#" + s.n + (s.frac ? " · media cuota" : "") + " · vence " + fmtDate(s.due) + " · " + money(s.amount) + " · " + estado + extra, "F3", 9.5, 1, 24);
+          });
+        });
+        head("Historial de pagos");
+        if (livePayments().length === 0) add("Sin pagos registrados.", "F1", 10.5, 2, 0, "0.4");
+        livePayments().slice().sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; }).forEach(function (p) {
+          var loan = loanById(p.loanId);
+          var c = loan ? clientById(loan.clientId) : null;
+          add(fmtDate(p.date) + " · " + (c ? c.name : "Cliente") + " · " + money(p.amount) + (p.note ? " · " + p.note : ""), "F3", 9.5, 1, 12);
+        });
+        return L;
+      }
+      function buildPdfBlob(L, headerLabel) {
+        var W = 612, H = 792, M = 48;
+        var raw = L;
+        var pages = [[]];
+        var y = H - M;
+        function newPage() { pages.push([]); y = H - M; }
+        raw.forEach(function (ln) {
+          if (ln.logo) {
+            if (y - 46 < M) newPage();
+            pages[pages.length - 1].push({ logo: true, y: y - 38 });
+            y -= 46;
+            return;
+          }
+          if (ln.rule) {
+            if (y - 12 < M) newPage();
+            pages[pages.length - 1].push({ rule: true, y: y - 5 });
+            y -= 12;
+            return;
+          }
+          if (ln.band) {
+            var bh = ln.h || 72;
+            if (y - bh < M) newPage();
+            pages[pages.length - 1].push({ band: true, title: ln.title || "", sub: ln.sub || "", meta: ln.meta || "", h: bh, y: y - bh });
+            y -= bh + (ln.after != null ? ln.after : 12);
+            return;
+          }
+          if (ln.frame) {
+            pages[pages.length - 1].push({ frame: true, y: y });
+            return;
+          }
+          if (ln.cols) {
+            var csize = ln.size || 11;
+            if (y - (ln.gap || 0) - csize * 1.45 < M) newPage();
+            y -= ln.gap || 0;
+            pages[pages.length - 1].push({
+              cols: true, left: ln.left || "", right: ln.right || "",
+              fontL: ln.fontL || ln.font || "F1", fontR: ln.fontR || ln.font || "F1",
+              sizeL: ln.sizeL || csize, sizeR: ln.sizeR || csize,
+              colorL: ln.colorL || ln.color || "", colorR: ln.colorR || ln.color || "",
+              x: ln.x || 0, w: ln.w || 0, tc: ln.tc || 0,
+              y: y - csize * 1.08
+            });
+            y -= csize * 1.45;
+            return;
+          }
+          if (ln.bar) {
+            if (y - 8 - 44 < M) newPage();
+            y -= 8;
+            pages[pages.length - 1].push({ bar: true, text: ln.text || "", size: ln.size || 15, y: y - 44 });
+            y -= 44;
+            return;
+          }
+          if (ln.box) {
+            if (y - 10 - 40 < M) newPage();
+            y -= 10;
+            pages[pages.length - 1].push({ box: true, text: ln.text || "", size: ln.size || 13, y: y - 40 });
+            y -= 40;
+            return;
+          }
+          if (ln.rbox) {
+            if (y - (ln.gap || 0) - 42 < M) newPage();
+            y -= ln.gap || 0;
+            pages[pages.length - 1].push({ rbox: true, left: ln.left || "", right: ln.right || "", y: y - 42 });
+            y -= 42;
+            return;
+          }
+          if (ln.ramount) {
+            if (y - (ln.gap || 0) - 48 < M) newPage();
+            y -= ln.gap || 0;
+            pages[pages.length - 1].push({ ramount: true, label: ln.label || "", value: ln.value || "", y: y - 48 });
+            y -= 48;
+            return;
+          }
+          if (ln.rsum3) {
+            if (y - (ln.gap || 0) - 50 < M) newPage();
+            y -= ln.gap || 0;
+            pages[pages.length - 1].push({ rsum3: true, items: ln.items || [], y: y });
+            y -= 50;
+            return;
+          }
+          if (ln.progress) {
+            if (ln.phead) {
+              if (y - 34 < M) newPage();
+              pages[pages.length - 1].push({ progress: true, pct: ln.pct || 0, phead: true, headY: y - 11, y: y - 34 });
+              y -= 34;
+              return;
+            }
+            if (y - 6 - 15 < M) newPage();
+            y -= 6;
+            pages[pages.length - 1].push({ progress: true, pct: ln.pct || 0, y: y - 15 });
+            y -= 15;
+            return;
+          }
+          if (ln.head4) {
+            if (y - 62 < M) newPage();
+            pages[pages.length - 1].push({ head4: true, title: ln.title || "", sub: ln.sub || "", logoY: y - 50, titleY: y - 21, subY: y - 39, ruleY: y - 62 });
+            y -= 62 + (ln.after != null ? ln.after : 12);
+            return;
+          }
+          if (ln.thead) {
+            if (y - (ln.gap || 0) - 26 < M) newPage();
+            y -= ln.gap || 0;
+            pages[pages.length - 1].push({ thead: true, y: y - 26 });
+            y -= 26;
+            return;
+          }
+          if (ln.trow) {
+            if (y - 24 < M) newPage();
+            pages[pages.length - 1].push({ trow: true, y: y - 24, cuota: ln.cuota || "", fecha: ln.fecha || "", monto: ln.monto || "", estado: ln.estado || "", ecolor: ln.ecolor || "", ebold: !!ln.ebold });
+            y -= 24;
+            return;
+          }
+          if (ln.tboxes) {
+            if (y - (ln.gap || 0) - 66 < M) newPage();
+            y -= ln.gap || 0;
+            pages[pages.length - 1].push({ tboxes: true, y: y - 66, left: ln.left || {}, right: ln.right || {} });
+            y -= 66;
+            return;
+          }
+          if (ln.keep && y - ln.keep < M) newPage();
+          var wrapped = pdfWrap(ln.text, ln.font, ln.size, ln.wrapW || (W - 2 * M - ln.indent));
+          wrapped.forEach(function (w, wi) {
+            var lh = ln.size * 1.45;
+            var gap = wi === 0 ? ln.gap : 0;
+            if (y - gap - lh < M) newPage();
+            y -= gap;
+            pages[pages.length - 1].push({
+              text: w, font: ln.font, size: ln.size,
+              x: ln.center ? M + ((W - 2 * M) - pdfCharW(ln.font, ln.size) * w.length) / 2 : (ln.x != null ? ln.x : M + ln.indent + (wi > 0 ? 10 : 0)),
+              y: y - ln.size * 1.08, color: ln.color, tc: ln.tc || 0
+            });
+            y -= lh;
+          });
+        });
+        var total = pages.length;
+        var objs = [];
+        objs[1] = "<< /Type /Catalog /Pages 2 0 R >>";
+        var kids = [];
+        for (var i = 0; i < total; i++) kids.push((6 + i * 2) + " 0 R");
+        objs[2] = "<< /Type /Pages /Kids [" + kids.join(" ") + "] /Count " + total + " >>";
+        objs[3] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>";
+        objs[4] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>";
+        objs[5] = "<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>";
+        var RX = 36, RW = W - 72, IX = 62, IW = RW - 52;
+        var NAVY = "0.071 0.247 0.482", NAVYF = NAVY + " rg";
+        function colSet(c) { if (!c) return "0 g"; return c.indexOf(" ") >= 0 ? c + " rg" : c + " g"; }
+        function rr(x, y, w, h, r) {
+          var k = r * 0.5523;
+          return (x + r) + " " + y + " m " + (x + w - r) + " " + y + " l " + (x + w - k) + " " + y + " " + (x + w) + " " + (y + k) + " " + (x + w) + " " + (y + r) + " c " +
+            (x + w) + " " + (y + h - r) + " l " + (x + w) + " " + (y + h - k) + " " + (x + w - k) + " " + (y + h) + " " + (x + w - r) + " " + (y + h) + " c " +
+            (x + r) + " " + (y + h) + " l " + (x + k) + " " + (y + h) + " " + x + " " + (y + h - k) + " " + x + " " + (y + h - r) + " c " +
+            x + " " + (y + r) + " l " + x + " " + (y + k) + " " + (x + k) + " " + y + " " + (x + r) + " " + y + " c h ";
+        }
+        function bandPath(x, y, w, h, r) {
+          var k = r * 0.5523;
+          return x + " " + y + " m " + (x + w) + " " + y + " l " + (x + w) + " " + (y + h - r) + " l " +
+            (x + w) + " " + (y + h - k) + " " + (x + w - k) + " " + (y + h) + " " + (x + w - r) + " " + (y + h) + " c " +
+            (x + r) + " " + (y + h) + " l " + (x + k) + " " + (y + h) + " " + x + " " + (y + h - k) + " " + x + " " + (y + h - r) + " c h ";
+        }
+        /* Logo ÚNICO de la app para todos los documentos PDF: reproduce el LOGO_SVG de la app
+           (cuadro azul #2563eb redondeado, N blanca trazada y flecha celeste hacia arriba)
+           sobre una retícula de 64 unidades, igual en recibo, estado de cuenta, ganancias y reporte general. */
+        function pdfLogo(x, y, size) {
+          var sc = size / 64;
+          function PX(sx) { return (x + sx * sc).toFixed(1); }
+          function PY(sy) { return (y + (64 - sy) * sc).toFixed(1); }
+          var s = "0.145 0.388 0.922 rg " + rr(x + 2 * sc, y + 2 * sc, 60 * sc, 60 * sc, 14 * sc) + "f\n";
+          s += "1 G " + (6 * sc).toFixed(2) + " w 1 J 1 j " + PX(20) + " " + PY(46) + " m " + PX(20) + " " + PY(18) + " l " + PX(44) + " " + PY(46) + " l " + PX(44) + " " + PY(18) + " l S\n";
+          s += "0.749 0.859 0.988 RG " + (4.5 * sc).toFixed(2) + " w 1 J 1 j " + PX(40) + " " + PY(12) + " m " + PX(52) + " " + PY(12) + " l " + PX(52) + " " + PY(24) + " l S\n";
+          s += "0.749 0.859 0.988 RG " + (4.5 * sc).toFixed(2) + " w 1 J " + PX(52) + " " + PY(12) + " m " + PX(36) + " " + PY(26) + " l S\n";
+          return s;
+        }
+        /* Texto centrado horizontalmente en cx (para las cajas de totales) */
+        function ctext(txt, font, size, cx, baseY, color, tc) {
+          var t = pdfClean(txt);
+          var wdt = pdfCharW(font, size) * t.length + (tc || 0) * t.length;
+          return "BT /" + font + " " + size + " Tf " + (tc || 0) + " Tc " + color + " 1 0 0 1 " + (cx - wdt / 2).toFixed(1) + " " + baseY.toFixed(1) + " Tm (" + pdfEsc(txt) + ") Tj ET\n";
+        }
+        pages.forEach(function (ops, pi) {
+          var stream = "";
+          if (pi > 0) {
+            stream += "BT /F1 9 Tf 0 Tc 0.45 g 1 0 0 1 " + M + " " + (H - 30) + " Tm (" + pdfEsc(headerLabel) + ") Tj ET\n";
+          }
+          ops.forEach(function (op) {
+            if (op.logo) {
+              stream += pdfLogo(M, op.y, 38);
+            } else if (op.rule) {
+              stream += "0.75 G 0.8 w " + M + " " + op.y + " m " + (W - M) + " " + op.y + " l S\n";
+            } else if (op.band) {
+              var bh2 = op.h || 72;
+              stream += NAVYF + " " + bandPath(RX, op.y, RW, bh2, 7) + "f\n";
+              stream += pdfLogo(RX + 24, op.y + (bh2 - 46) / 2, 46);
+              stream += "BT /F2 19 Tf 0 Tc 1 g 1 0 0 1 " + (RX + 86) + " " + (op.y + bh2 / 2 + 7) + " Tm (" + pdfEsc(op.title) + ") Tj ET\n";
+              stream += "BT /F1 10.5 Tf 2.5 Tc 0.80 0.87 0.95 rg 1 0 0 1 " + (RX + 86) + " " + (op.y + bh2 / 2 - 14) + " Tm (" + pdfEsc(op.sub.toUpperCase()) + ") Tj ET\n";
+              if (op.meta) {
+                var mw2 = pdfCharW("F1", 11) * pdfClean(op.meta).length * 1.12;
+                stream += "BT /F1 11 Tf 0 Tc 1 g 1 0 0 1 " + (RX + RW - 24 - mw2).toFixed(1) + " " + (op.y + bh2 / 2 + 2) + " Tm (" + pdfEsc(op.meta) + ") Tj ET\n";
+              }
+            } else if (op.cols) {
+              var cx0 = op.x || M, cw0 = op.w || (W - 2 * M);
+              var tc0 = (op.tc || 0) + " Tc ";
+              stream += "BT /" + op.fontL + " " + op.sizeL + " Tf " + tc0 + colSet(op.colorL) + " 1 0 0 1 " + cx0 + " " + op.y.toFixed(1) + " Tm (" + pdfEsc(op.left) + ") Tj ET\n";
+              if (op.right) stream += "BT /" + op.fontR + " " + op.sizeR + " Tf " + tc0 + colSet(op.colorR) + " 1 0 0 1 " + (cx0 + cw0 / 2 + 12) + " " + op.y.toFixed(1) + " Tm (" + pdfEsc(op.right) + ") Tj ET\n";
+            } else if (op.rbox) {
+              stream += "0.933 0.953 0.980 rg " + rr(IX, op.y, IW, 42, 5) + "f\n";
+              stream += "0.843 0.867 0.910 RG 1 w " + rr(IX, op.y, IW, 42, 5) + "S\n";
+              stream += "BT /F2 12.5 Tf 0 Tc " + NAVYF + " 1 0 0 1 " + (IX + 16) + " " + (op.y + 16.5) + " Tm (" + pdfEsc(op.left) + ") Tj ET\n";
+              var rw3 = pdfCharW("F2", 20) * pdfClean(op.right).length * 1.18;
+              stream += "BT /F2 20 Tf 0 Tc " + NAVYF + " 1 0 0 1 " + (IX + IW - 16 - rw3).toFixed(1) + " " + (op.y + 13.8) + " Tm (" + pdfEsc(op.right) + ") Tj ET\n";
+            } else if (op.ramount) {
+              stream += NAVYF + " " + rr(IX, op.y, IW, 48, 5) + "f\n";
+              stream += "BT /F1 11 Tf 2 Tc 1 g 1 0 0 1 " + (IX + 16) + " " + (op.y + 20) + " Tm (" + pdfEsc(op.label) + ") Tj ET\n";
+              var aw3 = pdfCharW("F2", 25) * pdfClean(op.value).length * 1.18;
+              stream += "BT /F2 25 Tf 0 Tc 1 g 1 0 0 1 " + (IX + IW - 16 - aw3).toFixed(1) + " " + (op.y + 15) + " Tm (" + pdfEsc(op.value) + ") Tj ET\n";
+            } else if (op.rsum3) {
+              var cw3 = (IW - 36) / 3;
+              op.items.forEach(function (it, ii) {
+                var ix3 = IX + ii * (cw3 + 18);
+                stream += "BT /F1 10 Tf 0 Tc 0.392 0.455 0.545 rg 1 0 0 1 " + ix3.toFixed(1) + " " + (op.y - 10) + " Tm (" + pdfEsc(it.label) + ") Tj ET\n";
+                pdfWrap(it.value, "F2", 12, cw3 * 0.88).slice(0, 2).forEach(function (wl, wi) {
+                  stream += "BT /F2 12 Tf 0 Tc 0.102 0.137 0.196 rg 1 0 0 1 " + ix3.toFixed(1) + " " + (op.y - 27 - wi * 15) + " Tm (" + pdfEsc(wl) + ") Tj ET\n";
+                });
+              });
+            } else if (op.bar) {
+              var bw2 = pdfCharW("F2", op.size) * pdfClean(op.text).length;
+              stream += "0.145 0.388 0.922 rg " + M + " " + op.y + " " + (W - 2 * M) + " 44 re f\n";
+              stream += "BT /F2 " + op.size + " Tf 0 Tc 1 g 1 0 0 1 " + (M + ((W - 2 * M) - bw2) / 2).toFixed(1) + " " + (op.y + 22 - op.size * 0.36).toFixed(1) + " Tm (" + pdfEsc(op.text) + ") Tj ET\n";
+            } else if (op.box) {
+              var xw2 = pdfCharW("F2", op.size) * pdfClean(op.text).length;
+              stream += "0.929 0.953 1 rg " + M + " " + op.y + " " + (W - 2 * M) + " 40 re f\n";
+              stream += "0.145 0.388 0.922 RG 1.2 w " + M + " " + op.y + " " + (W - 2 * M) + " 40 re S\n";
+              stream += "BT /F2 " + op.size + " Tf 0 Tc 0.145 0.388 0.922 rg 1 0 0 1 " + (M + ((W - 2 * M) - xw2) / 2).toFixed(1) + " " + (op.y + 20 - op.size * 0.36).toFixed(1) + " Tm (" + pdfEsc(op.text) + ") Tj ET\n";
+            } else if (op.progress) {
+              if (op.phead) {
+                var pct3 = Math.max(0, Math.min(100, op.pct));
+                stream += "BT /F1 11 Tf 0 Tc 0.278 0.333 0.412 rg 1 0 0 1 " + IX + " " + op.headY.toFixed(1) + " Tm (Avance del préstamo) Tj ET\n";
+                var s1 = pct3 + "%", s2 = " pagado";
+                var tw3 = pdfCharW("F2", 11) * s1.length * 1.18 + pdfCharW("F1", 11) * s2.length * 1.12;
+                stream += "BT /F2 11 Tf 0 Tc 0.278 0.333 0.412 rg 1 0 0 1 " + (IX + IW - tw3).toFixed(1) + " " + op.headY.toFixed(1) + " Tm (" + s1 + ") Tj ET\n";
+                stream += "BT /F1 11 Tf 0 Tc 0.278 0.333 0.412 rg 1 0 0 1 " + (IX + IW - pdfCharW("F1", 11) * s2.length * 1.12).toFixed(1) + " " + op.headY.toFixed(1) + " Tm (" + pdfEsc(s2) + ") Tj ET\n";
+                stream += "0.886 0.910 0.941 rg " + rr(IX, op.y, IW, 13, 6.5) + "f\n";
+                if (pct3 > 0) stream += NAVYF + " " + rr(IX, op.y, Math.max(13, IW * pct3 / 100), 13, 6.5) + "f\n";
+              } else {
+                var pw2 = (W - 2 * M) - 54, pct2 = Math.max(0, Math.min(100, op.pct));
+                stream += "0.898 g " + M + " " + op.y + " " + pw2 + " 15 re f\n";
+                if (pct2 > 0) stream += "0.145 0.388 0.922 rg " + M + " " + op.y + " " + (pw2 * pct2 / 100).toFixed(1) + " 15 re f\n";
+                stream += "BT /F2 12 Tf 0 Tc 0 g 1 0 0 1 " + (M + pw2 + 10) + " " + (op.y + 3.5) + " Tm (" + pct2 + "%) Tj ET\n";
+              }
+            } else if (op.head4) {
+              stream += pdfLogo(M, op.logoY, 50);
+              stream += "BT /F2 19 Tf 0 Tc 0.102 0.137 0.196 rg 1 0 0 1 " + (M + 64) + " " + op.titleY.toFixed(1) + " Tm (" + pdfEsc(op.title) + ") Tj ET\n";
+              stream += "BT /F1 11.5 Tf 0 Tc 0.278 0.333 0.412 rg 1 0 0 1 " + (M + 64) + " " + op.subY.toFixed(1) + " Tm (" + pdfEsc(op.sub) + ") Tj ET\n";
+              stream += NAVY + " RG 2.2 w " + M + " " + op.ruleY.toFixed(1) + " m " + (W - M) + " " + op.ruleY.toFixed(1) + " l S\n";
+            } else if (op.thead) {
+              stream += "0.945 0.961 0.976 rg " + M + " " + op.y + " " + (W - 2 * M) + " 26 re f\n";
+              stream += "0.886 0.910 0.941 RG 0.8 w " + M + " " + op.y + " m " + (W - M) + " " + op.y + " l S\n";
+              var hb4 = op.y + 9.5;
+              stream += "BT /F2 11 Tf 0 Tc 0.102 0.137 0.196 rg 1 0 0 1 " + (M + 10) + " " + hb4 + " Tm (Cuota) Tj ET\n";
+              stream += "BT /F2 11 Tf 0 Tc 0.102 0.137 0.196 rg 1 0 0 1 " + (M + 168) + " " + hb4 + " Tm (Fecha) Tj ET\n";
+              stream += "BT /F2 11 Tf 0 Tc 0.102 0.137 0.196 rg 1 0 0 1 " + (M + 356 - pdfCharW("F2", 11) * 5).toFixed(1) + " " + hb4 + " Tm (Monto) Tj ET\n";
+              stream += "BT /F2 11 Tf 0 Tc 0.102 0.137 0.196 rg 1 0 0 1 " + (W - M - 10 - pdfCharW("F2", 11) * 6).toFixed(1) + " " + hb4 + " Tm (Estado) Tj ET\n";
+            } else if (op.trow) {
+              var rb4 = op.y + 8.5;
+              stream += "0.886 0.910 0.941 RG 0.8 w " + M + " " + op.y + " m " + (W - M) + " " + op.y + " l S\n";
+              stream += "BT /F1 11 Tf 0 Tc 0.102 0.137 0.196 rg 1 0 0 1 " + (M + 10) + " " + rb4 + " Tm (" + pdfEsc(op.cuota) + ") Tj ET\n";
+              stream += "BT /F1 11 Tf 0 Tc 0.392 0.455 0.545 rg 1 0 0 1 " + (M + 168) + " " + rb4 + " Tm (" + pdfEsc(op.fecha) + ") Tj ET\n";
+              stream += "BT /F1 11 Tf 0 Tc 0.102 0.137 0.196 rg 1 0 0 1 " + (M + 356 - pdfCharW("F1", 11) * pdfClean(op.monto).length).toFixed(1) + " " + rb4 + " Tm (" + pdfEsc(op.monto) + ") Tj ET\n";
+              var ef4 = op.ebold ? "F2" : "F1";
+              stream += "BT /" + ef4 + " 11 Tf 0 Tc " + (op.ecolor ? op.ecolor + " rg" : "0.102 0.137 0.196 rg") + " 1 0 0 1 " + (W - M - 10 - pdfCharW(ef4, 11) * pdfClean(op.estado).length).toFixed(1) + " " + rb4 + " Tm (" + pdfEsc(op.estado) + ") Tj ET\n";
+            } else if (op.tboxes) {
+              var bw4 = (W - 2 * M - 14) / 2, bx4 = M + bw4 + 14;
+              stream += "0.941 0.992 0.965 rg " + rr(M, op.y, bw4, 66, 6) + "f\n";
+              stream += "1 0.969 0.929 rg " + rr(bx4, op.y, bw4, 66, 6) + "f\n";
+              stream += ctext(op.left.label || "", "F1", 10, M + bw4 / 2, op.y + 47, "0.392 0.455 0.545 rg", 1);
+              stream += ctext(op.left.value || "", "F2", 16, M + bw4 / 2, op.y + 27, "0.102 0.137 0.196 rg", 0);
+              stream += ctext(op.left.sub || "", "F1", 10.5, M + bw4 / 2, op.y + 10, "0.278 0.333 0.412 rg", 0);
+              stream += ctext(op.right.label || "", "F1", 10, bx4 + bw4 / 2, op.y + 47, "0.392 0.455 0.545 rg", 1);
+              stream += ctext(op.right.value || "", "F2", 16, bx4 + bw4 / 2, op.y + 27, "0.102 0.137 0.196 rg", 0);
+              stream += ctext(op.right.sub || "", "F1", 10.5, bx4 + bw4 / 2, op.y + 10, "0.278 0.333 0.412 rg", 0);
+            } else if (op.frame) {
+              /* marcador: el borde de la tarjeta se dibuja al final de la página */
+            } else {
+              stream += "BT /" + op.font + " " + op.size + " Tf " + (op.tc || 0) + " Tc " + colSet(op.color) + " 1 0 0 1 " +
+                op.x.toFixed(1) + " " + op.y.toFixed(1) + " Tm (" + pdfEsc(op.text) + ") Tj ET\n";
+            }
+          });
+          var bandOp = null, frameOp = null;
+          ops.forEach(function (o) { if (o.band) bandOp = o; if (o.frame) frameOp = o; });
+          if (bandOp && frameOp) {
+            stream += "0.843 0.867 0.910 RG 1 w " + rr(RX, frameOp.y - 16, RW, (bandOp.y + bandOp.h) - (frameOp.y - 16), 7) + "S\n";
+          }
+          stream += "BT /F1 8.5 Tf 0 Tc 0.45 g 1 0 0 1 " + M + " 30 Tm (Página " + (pi + 1) + " de " + total + ") Tj ET\n";
+          var pageId = 6 + pi * 2, contentId = pageId + 1;
+          objs[pageId] = "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + W + " " + H + "] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents " + contentId + " 0 R >>";
+          objs[contentId] = "<< /Length " + stream.length + " >>\nstream\n" + stream + "endstream";
+        });
+        var pdf = "%PDF-1.4\n%âãÏÓ\n";
+        var offsets = [0];
+        var count = objs.length;
+        for (var id = 1; id < count; id++) {
+          offsets[id] = pdf.length;
+          pdf += id + " 0 obj\n" + objs[id] + "\nendobj\n";
+        }
+        var xrefPos = pdf.length;
+        pdf += "xref\n0 " + count + "\n0000000000 65535 f \n";
+        for (var j = 1; j < count; j++) {
+          var off = String(offsets[j]);
+          while (off.length < 10) off = "0" + off;
+          pdf += off + " 00000 n \n";
+        }
+        pdf += "trailer\n<< /Size " + count + " /Root 1 0 R >>\nstartxref\n" + xrefPos + "\n%%EOF";
+        var bytes = new Uint8Array(pdf.length);
+        for (var k = 0; k < pdf.length; k++) bytes[k] = pdf.charCodeAt(k) & 0xff;
+        var pdfBlob = new Blob([bytes], { type: "application/pdf" });
+        return pdfBlob;
+      }
+      // Comparte un PDF ya generado con un título claro (ej.: el recibo): si el teléfono
+      // permite compartir archivos, se abre la hoja de compartir con el archivo ya
+      // nombrado; si no, o si el compartir falla, se descarga el PDF con ese mismo nombre.
+      // IMPORTANTE: además del título y el archivo hay que enviar el campo "text" con
+      // "Recibo de pago - {cliente}". WhatsApp ignora el "title" y usa el "text" como
+      // texto que acompaña al documento; sin "text", WhatsApp rellena ese espacio con
+      // la dirección interna del archivo (blob:https://…) y eso es lo que veía el
+      // cliente. Nunca se envía ningún campo "url".
+      // Devuelve una promesa que resuelve true si el documento salió (compartido o
+      // descargado) y false si el usuario canceló la hoja de compartir, para que la
+      // vista previa del recibo sepa si debe cerrarse o quedarse abierta.
+      function sharePdfBlob(pdfBlob, filename, shareTitle) {
+        if (shareTitle && navigator.share && window.File) {
+          var shareFile = null;
+          try { shareFile = new File([pdfBlob], filename, { type: "application/pdf" }); } catch (e) { shareFile = null; }
+          if (shareFile) {
+            var shareData = { title: shareTitle, text: shareTitle, files: [shareFile] };
+            var canShareFile = false;
+            try { canShareFile = !navigator.canShare || navigator.canShare(shareData); } catch (e) { canShareFile = false; }
+            if (canShareFile) {
+              try {
+                return navigator.share(shareData).then(function () {
+                  toast("Recibo compartido.");
+                  return true;
+                }).catch(function (err) {
+                  if (err && err.name === "AbortError") return false; // el usuario canceló el compartir
+                  downloadBlob(pdfBlob, filename);
+                  toast("Recibo PDF descargado.");
+                  return true;
+                });
+              } catch (e) {
+                downloadBlob(pdfBlob, filename);
+                toast("Recibo PDF descargado.");
+                return Promise.resolve(true);
+              }
+            }
+          }
+        }
+        downloadBlob(pdfBlob, filename);
+        if (shareTitle) toast("Recibo PDF descargado.");
+        return Promise.resolve(true);
+      }
+      function downloadPdfLines(L, filename, headerLabel, shareTitle) {
+        var pdfBlob = buildPdfBlob(L, headerLabel);
+        if (shareTitle) { sharePdfBlob(pdfBlob, filename, shareTitle); return; }
+        downloadBlob(pdfBlob, filename);
+      }
+      function exportPdf() {
+        downloadPdfLines(reportLines(), "reporte-nova-" + todayISO() + ".pdf", "Inversiones Nova R & L - Reporte de préstamos");
+        toast("Reporte PDF descargado.");
+      }
+
+      /* ============ Constructores de líneas para documentos PDF ============ */
+      function makeLineWriter(L) {
+        function add(text, font, size, gap, indent, color, keep) {
+          L.push({ text: String(text), font: font || "F1", size: size || 10.5, gap: gap || 0, indent: indent || 0, color: color || "", keep: keep || 0 });
+        }
+        function head(text) { add(text, "F2", 13.5, 14, 0, "", 70); L.push({ rule: true }); }
+        function brand(subtitle) {
+          L.push({ logo: true });
+          add("Inversiones Nova R & L", "F2", 19, 0);
+          add(subtitle, "F1", 12.5, 2);
+          add("Generado el " + fmtDate(todayISO()), "F1", 10, 1, 0, "0.4");
+          L.push({ rule: true });
+        }
+        return { add: add, head: head, brand: brand };
+      }
+      function fileSlug(s) {
+        var t = String(s || "cliente");
+        if (t.normalize) t = t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "cliente";
+      }
+      function estadoLabel(status) {
+        return status === "pagada" ? "Pagada" : status === "vencida" ? "Vencida" : "Pendiente";
+      }
+
+      /* ============ Recibo de pago en PDF ============ */
+      // Posición del pago en el tiempo: cuánto se había pagado antes y después de él,
+      // y qué cuota(s) cubre según el plan.
+      function paymentInfo(loan, payment) {
+        var pays = loanPayments(loan.id);
+        var cum = 0, before = 0, after = 0;
+        pays.forEach(function (p) {
+          if (p.id === payment.id) { before = cum; after = round2(cum + Number(p.amount)); }
+          cum = round2(cum + Number(p.amount));
+        });
+        var acc = 0, startN = null, endN = null;
+        loan.installments.forEach(function (inst) {
+          var s = acc, e = round2(acc + Number(inst.amount));
+          if (startN === null && e > before + 0.001) startN = inst.n;
+          if (s < after - 0.001) endN = inst.n;
+          acc = e;
+        });
+        var concepto = "Pago a cuenta";
+        if (startN !== null && endN !== null) {
+          concepto = startN === endN ? "Cuota #" + startN + " de " + loan.installments.length : "Cuotas #" + startN + " a #" + endN + " de " + loan.installments.length;
+        }
+        return { before: before, after: after, concepto: concepto, startN: startN, endN: endN, balanceAfter: round2(Number(loan.total) - after) };
+      }
+      // Datos del recibo calculados una sola vez con las mismas fórmulas del PDF:
+      // los usan tanto receiptLines (el documento) como la vista previa en pantalla,
+      // así lo que el usuario revisa antes de enviar es exactamente lo que va en el PDF.
+      function receiptData(loan, payment) {
+        var c = clientById(loan.clientId);
+        var info = paymentInfo(loan, payment);
+        var totalCuotas = loan.installments.length;
+        var acc = 0, pagadas = 0;
+        loan.installments.forEach(function (inst) {
+          acc = round2(acc + Number(inst.amount));
+          if (acc <= info.after + 0.001) pagadas++;
+        });
+        var pendientes = totalCuotas - pagadas;
+        var pct = Number(loan.total) > 0 ? Math.round(info.after / Number(loan.total) * 100) : 0;
+        var MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+        var pd = parseDate(payment.date);
+        var fechaLarga = pd.getDate() + " de " + MESES[pd.getMonth()] + " de " + pd.getFullYear();
+        var fechaBand = (pd.getDate() < 10 ? "0" : "") + pd.getDate() + " / " + (pd.getMonth() + 1 < 10 ? "0" : "") + (pd.getMonth() + 1) + " / " + pd.getFullYear();
+        var conceptoMuestra = "Pago a cuenta";
+        if (info.startN !== null && info.endN !== null) {
+          conceptoMuestra = info.startN === info.endN ? "Pago de cuota #" + info.startN + " de " + totalCuotas : "Pago de cuotas #" + info.startN + " a #" + info.endN + " de " + totalCuotas;
+        }
+        var notaPie = "Gracias por su pago. Conserve este recibo como comprobante de " + (info.startN !== null && info.endN !== null ? (info.startN === info.endN ? "la cuota #" + info.startN : "las cuotas #" + info.startN + " a #" + info.endN) : "su pago") + ".";
+        if (pendientes > 0) notaPie += " Su próximo pago corresponde a la cuota #" + (pagadas + 1) + ".";
+        else notaPie += " Con este pago su préstamo queda saldado.";
+        return {
+          client: c, info: info, totalCuotas: totalCuotas, pagadas: pagadas,
+          pendientes: pendientes, pct: pct, fechaLarga: fechaLarga,
+          fechaBand: fechaBand, conceptoMuestra: conceptoMuestra, notaPie: notaPie
+        };
+      }
+      function receiptLines(loan, payment) {
+        var c = clientById(loan.clientId);
+        var info = paymentInfo(loan, payment);
+        var totalCuotas = loan.installments.length;
+        // Cuotas ya cubiertas hasta este pago (según el acumulado real pagado).
+        var acc = 0, pagadas = 0;
+        loan.installments.forEach(function (inst) {
+          acc = round2(acc + Number(inst.amount));
+          if (acc <= info.after + 0.001) pagadas++;
+        });
+        var pendientes = totalCuotas - pagadas;
+        var pct = Number(loan.total) > 0 ? Math.round(info.after / Number(loan.total) * 100) : 0;
+        var MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+        var pd = parseDate(payment.date);
+        var fechaLarga = pd.getDate() + " de " + MESES[pd.getMonth()] + " de " + pd.getFullYear();
+        var fechaBand = (pd.getDate() < 10 ? "0" : "") + pd.getDate() + " / " + (pd.getMonth() + 1 < 10 ? "0" : "") + (pd.getMonth() + 1) + " / " + pd.getFullYear();
+        var conceptoMuestra = "Pago a cuenta";
+        if (info.startN !== null && info.endN !== null) {
+          conceptoMuestra = info.startN === info.endN ? "Pago de cuota #" + info.startN + " de " + totalCuotas : "Pago de cuotas #" + info.startN + " a #" + info.endN + " de " + totalCuotas;
+        }
+        var NAVYC = "0.071 0.247 0.482", GRAYC = "0.392 0.455 0.545", DARKC = "0.102 0.137 0.196";
+        var IXL = 62, IWL = 488;
+        var L = [];
+        L.push({ band: true, title: "Inversiones Nova R & L", sub: "Recibo de Pago", meta: fechaBand, h: 86, after: 18 });
+        L.push({ cols: true, left: "DATOS DEL CLIENTE", right: "DATOS DEL PRÉSTAMO", font: "F2", size: 9.5, gap: 0, color: NAVYC, tc: 1.6, x: IXL, w: IWL });
+        L.push({ cols: true, left: "Cliente:", right: "Monto del préstamo:", font: "F1", size: 11.5, gap: 5, color: GRAYC, x: IXL, w: IWL });
+        L.push({ cols: true, left: c ? c.name : "Cliente", right: money(loan.amount), fontL: "F2", fontR: "F2", size: 12.5, gap: 1, color: DARKC, x: IXL, w: IWL });
+        L.push({ cols: true, left: "Concepto:", right: "Saldo restante:", font: "F1", size: 11.5, gap: 10, color: GRAYC, x: IXL, w: IWL });
+        L.push({ cols: true, left: conceptoMuestra, right: money(info.balanceAfter), fontL: "F1", fontR: "F2", sizeL: 12.5, sizeR: 12.5, size: 12.5, gap: 1, color: DARKC, x: IXL, w: IWL });
+        L.push({ cols: true, left: "Fecha del pago:", right: "Cuotas:", font: "F1", size: 11.5, gap: 10, color: GRAYC, x: IXL, w: IWL });
+        L.push({ cols: true, left: fechaLarga, right: pagadas + " pagadas de " + totalCuotas, font: "F1", size: 12.5, gap: 1, color: DARKC, x: IXL, w: IWL });
+        L.push({ text: "CUOTAS PENDIENTES", font: "F2", size: 9.5, gap: 18, indent: 0, color: NAVYC, tc: 1.6, x: IXL, wrapW: IWL, keep: 0 });
+        L.push({ rbox: true, left: "Cuotas pendientes", right: pendientes + " de " + totalCuotas, gap: 8 });
+        L.push({ text: "AVANCE DEL PRÉSTAMO", font: "F2", size: 9.5, gap: 18, indent: 0, color: NAVYC, tc: 1.6, x: IXL, wrapW: IWL, keep: 0 });
+        L.push({ progress: true, pct: pct, phead: true });
+        L.push({ rsum3: true, gap: 10, items: [
+          { label: "Cuotas pagadas", value: pagadas + " cuotas pagadas de " + totalCuotas },
+          { label: "Total pagado", value: money(info.after) },
+          { label: "Total pendiente", value: money(info.balanceAfter) }
+        ] });
+        if (payment.note) L.push({ text: "Nota: " + payment.note, font: "F1", size: 10.5, gap: 2, indent: 0, color: GRAYC, x: IXL, wrapW: IWL, keep: 0 });
+        L.push({ ramount: true, label: "MONTO RECIBIDO", value: money(payment.amount), gap: 16 });
+        var notaPie = "Gracias por su pago. Conserve este recibo como comprobante de " + (info.startN !== null && info.endN !== null ? (info.startN === info.endN ? "la cuota #" + info.startN : "las cuotas #" + info.startN + " a #" + info.endN) : "su pago") + ".";
+        if (pendientes > 0) notaPie += " Su próximo pago corresponde a la cuota #" + (pagadas + 1) + ".";
+        else notaPie += " Con este pago su préstamo queda saldado.";
+        L.push({ text: notaPie, font: "F1", size: 10.5, gap: 14, indent: 0, color: GRAYC, x: IXL, wrapW: IWL, keep: 0 });
+        L.push({ frame: true });
+        return L;
+      }
+      function receiptPreviewField(label, value, bold) {
+        return '<div class="receipt-flabel">' + esc(label) + '</div>' +
+          '<div class="receipt-fvalue' + (bold ? " bold" : "") + '">' + esc(value) + "</div>";
+      }
+      // Al tocar «Recibo» ya NO se comparte de inmediato: primero se muestra la vista
+      // previa del recibo dentro de la app, con el mismo diseño y los mismos datos del
+      // PDF, y solo cuando el usuario toca «Compartir recibo» en esa vista se genera el
+      // PDF y se abre la hoja de compartir. Así puede verificarlo antes de enviarlo,
+      // porque al compartir con el texto "Recibo de pago - {cliente}" (el que evita que
+      // WhatsApp muestre la ruta blob:) WhatsApp ya no enseña su propia vista previa.
+      function exportReceipt(payment) {
+        var loan = loanById(payment.loanId);
+        if (!loan) return;
+        var c = clientById(loan.clientId);
+        // Nombre claro al compartir o descargar: "Recibo de pago - {nombre del cliente}"
+        var tituloRecibo = "Recibo de pago - " + (c ? c.name : "Cliente");
+        var d = receiptData(loan, payment);
+        var pctW = Math.max(0, Math.min(100, d.pct));
+        openModal(
+          "<h3>Vista previa del recibo</h3>" +
+          "<p style='color:var(--muted);line-height:1.6;margin:0 0 14px'>Este es el recibo tal como lo recibirá el cliente. Revísalo y, cuando esté correcto, toca «Compartir recibo» para enviarlo.</p>" +
+          '<div class="receipt-card">' +
+            '<div class="receipt-band"><div class="receipt-logo">' + LOGO_SVG + "</div>" +
+              '<div><div class="receipt-band-title">Inversiones Nova R &amp; L</div>' +
+              '<div class="receipt-band-sub">RECIBO DE PAGO</div></div>' +
+              '<div class="receipt-band-date">' + esc(d.fechaBand) + "</div></div>" +
+            '<div class="receipt-body">' +
+              '<div class="receipt-cols">' +
+                "<div>" + '<div class="receipt-sec">DATOS DEL CLIENTE</div>' +
+                  receiptPreviewField("Cliente:", c ? c.name : "Cliente", true) +
+                  receiptPreviewField("Concepto:", d.conceptoMuestra, false) +
+                  receiptPreviewField("Fecha del pago:", d.fechaLarga, false) + "</div>" +
+                "<div>" + '<div class="receipt-sec">DATOS DEL PRÉSTAMO</div>' +
+                  receiptPreviewField("Monto del préstamo:", money(loan.amount), true) +
+                  receiptPreviewField("Saldo restante:", money(d.info.balanceAfter), true) +
+                  receiptPreviewField("Cuotas:", d.pagadas + " pagadas de " + d.totalCuotas, false) + "</div>" +
+              "</div>" +
+              '<div class="receipt-sec" style="margin-top:16px">CUOTAS PENDIENTES</div>' +
+              '<div class="receipt-rbox"><span>Cuotas pendientes</span><strong>' + d.pendientes + " de " + d.totalCuotas + "</strong></div>" +
+              '<div class="receipt-sec" style="margin-top:16px">AVANCE DEL PRÉSTAMO</div>' +
+              '<div class="receipt-prow"><span>Avance del préstamo</span><span><strong>' + d.pct + "%</strong> pagado</span></div>" +
+              '<div class="receipt-progress"><div style="width:' + pctW + '%"></div></div>' +
+              '<div class="receipt-sum3">' +
+                '<div><div class="receipt-slabel">Cuotas pagadas</div><div class="receipt-svalue">' + d.pagadas + " cuotas pagadas de " + d.totalCuotas + "</div></div>" +
+                '<div><div class="receipt-slabel">Total pagado</div><div class="receipt-svalue">' + money(d.info.after) + "</div></div>" +
+                '<div><div class="receipt-slabel">Total pendiente</div><div class="receipt-svalue">' + money(d.info.balanceAfter) + "</div></div>" +
+              "</div>" +
+              (payment.note ? '<div class="receipt-note">Nota: ' + esc(payment.note) + "</div>" : "") +
+              '<div class="receipt-amount"><span>MONTO RECIBIDO</span><strong>' + money(payment.amount) + "</strong></div>" +
+              '<div class="receipt-foot">' + esc(d.notaPie) + "</div>" +
+            "</div>" +
+          "</div>" +
+          '<div class="btn-row"><button type="button" class="btn ghost" data-close>Cerrar</button>' +
+          '<button type="button" class="btn ghost" id="receiptDownload">Descargar PDF</button></div>' +
+          '<div class="btn-row"><button type="button" class="btn block" id="receiptShare">Compartir recibo</button></div>'
+        );
+        document.querySelector("[data-close]").addEventListener("click", closeModal);
+        document.getElementById("receiptDownload").addEventListener("click", function () {
+          var blob = buildPdfBlob(receiptLines(loan, payment), "Inversiones Nova R & L - Recibo de pago");
+          downloadBlob(blob, tituloRecibo + ".pdf");
+          toast("Recibo PDF descargado.");
+        });
+        document.getElementById("receiptShare").addEventListener("click", function () {
+          // El PDF se genera y se comparte dentro del mismo toque, sin pasos
+          // intermedios, para no perder el gesto que iOS exige para compartir.
+          var blob = buildPdfBlob(receiptLines(loan, payment), "Inversiones Nova R & L - Recibo de pago");
+          sharePdfBlob(blob, tituloRecibo + ".pdf", tituloRecibo).then(function (done) {
+            if (done) closeModal(); // si canceló el compartir, la vista previa queda abierta
+          });
+        });
+      }
+
+      /* ============ Reporte por préstamo para el cliente (PDF) ============
+         Diseño aprobado: Opción 4 — Estado de cuenta detallado (tal cual la muestra):
+         encabezado con el logo de la app y el nombre, línea de resumen, tabla completa
+         de cuotas (número, fecha, monto y estado, con la próxima marcada) y las dos
+         cajas de totales (pagado en verde, saldo pendiente en naranja). */
+      function loanReportLines(loan) {
+        var c = clientById(loan.clientId);
+        var states = installmentStates(loan);
+        var nd = nextDue(loan);
+        var totalCuotas = loan.installments.length;
+        var pagadas = 0;
+        states.forEach(function (s) { if (s.status === "pagada") pagadas++; });
+        var pagado = loanPaid(loan);
+        var saldo = loanBalance(loan);
+        var L = [];
+        L.push({ head4: true, title: "Inversiones Nova R & L", sub: "Estado de cuenta detallado", after: 16 });
+        L.push({ text: "Cliente: " + (c ? c.name : "Cliente") + "   |   Préstamo: " + money(loan.amount) + "   |   Total a pagar: " + money(loan.total) + "   |   Cuota: " + money(loanCuota(loan)) + "   |   Pagadas: " + pagadas + " de " + totalCuotas, font: "F1", size: 11, gap: 0, indent: 0, color: "0.102 0.137 0.196", keep: 0 });
+        L.push({ thead: true, gap: 12 });
+        states.forEach(function (s) {
+          var esProxima = !!nd && s.n === nd.n;
+          var estado, ecolor = "", ebold = false;
+          if (s.status === "pagada") { estado = "Pagada"; ecolor = "0.078 0.502 0.239"; ebold = true; }
+          else if (s.status === "vencida") { estado = "Vencida" + (esProxima ? " - Próxima" : ""); ecolor = "0.863 0.149 0.149"; ebold = true; }
+          else {
+            estado = "Pendiente" + (esProxima ? " - Próxima" : "");
+            if (esProxima) { ecolor = "0.706 0.325 0.035"; ebold = true; }
+          }
+          L.push({ trow: true, cuota: s.frac ? "Media cuota" : "Cuota #" + s.n, fecha: fmtDate(s.due), monto: money(s.amount), estado: estado, ecolor: ecolor, ebold: ebold });
+        });
+        L.push({ tboxes: true, gap: 16,
+          left: { label: "TOTAL PAGADO", value: money(pagado), sub: pagadas + " de " + totalCuotas + " cuotas" },
+          right: { label: "SALDO PENDIENTE", value: money(saldo), sub: (totalCuotas - pagadas) + " de " + totalCuotas + " cuotas" }
+        });
+        var msg;
+        if (saldo <= 0) {
+          msg = "¡Felicidades! Su préstamo está saldado. Gracias por su responsabilidad y por confiar en Inversiones Nova R & L.";
+        } else if (nd) {
+          msg = "Gracias por su confianza. Su próxima cuota es la #" + nd.n + " por " + money(round2(nd.amount - nd.covered)) + ", con vencimiento el " + fmtDate(nd.due) + ". Si tiene alguna pregunta sobre su préstamo, contáctenos.";
+        } else {
+          msg = "Gracias por su confianza. Si tiene alguna pregunta sobre su préstamo, contáctenos.";
+        }
+        L.push({ text: msg, font: "F1", size: 10.5, gap: 18, indent: 0, color: "0.392 0.455 0.545", center: true, keep: 0 });
+        return L;
+      }
+      function exportLoanReport(loan) {
+        var c = clientById(loan.clientId);
+        downloadPdfLines(loanReportLines(loan), "reporte-prestamo-" + fileSlug(c ? c.name : "cliente") + "-" + todayISO() + ".pdf", "Inversiones Nova R & L - Estado de cuenta");
+        toast("Reporte del préstamo descargado.");
+      }
+
+      /* ============ Reporte mensual de ganancias (PDF) ============ */
+      function gananciasLines(mk) {
+        var s = gananciasStats(mk);
+        var L = [];
+        var w = makeLineWriter(L);
+        w.brand("Reporte de ganancias");
+        w.add("Mes: " + monthLabel(mk), "F2", 12.5, 4);
+        w.head("Resumen del mes");
+        w.add("Total prestado en el mes: " + money(s.prestado), "F1", 11, 2, 12);
+        w.add("Total cobrado en el mes: " + money(s.cobrado), "F1", 11, 2, 12);
+        w.add("Intereses ganados en el mes: " + money(s.interes), "F2", 12, 2, 12);
+        w.add("Préstamos activos actualmente: " + s.activos, "F1", 11, 2, 12);
+        w.add("Los intereses ganados corresponden a la parte proporcional de interés de cada pago recibido en el mes.", "F1", 10, 4, 12, "0.4");
+        w.head("Préstamos otorgados en el mes");
+        var loansMes = liveLoans().filter(function (l) { return monthKey(l.startDate) === mk; })
+          .sort(function (a, b) { return a.startDate < b.startDate ? -1 : 1; });
+        if (loansMes.length === 0) w.add("Sin préstamos otorgados en este mes.", "F1", 10.5, 2, 12, "0.4");
+        loansMes.forEach(function (loan) {
+          var c = clientById(loan.clientId);
+          w.add((c ? c.name : "Cliente") + " · " + money(loan.amount) + " · cuota " + money(loanCuota(loan)) + " · interés " + money(loanInterestAmount(loan)) + " · total " + money(loan.total) + " · " + loan.installments.length + " cuotas " + freqLabel(loan.frequency).toLowerCase() + " · " + fmtDate(loan.startDate), "F1", 10.5, 1, 12);
+        });
+        w.head("Pagos recibidos en el mes");
+        var paysMes = livePayments().filter(function (p) { return monthKey(p.date) === mk; })
+          .sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+        if (paysMes.length === 0) w.add("Sin pagos recibidos en este mes.", "F1", 10.5, 2, 12, "0.4");
+        paysMes.forEach(function (p) {
+          var loan = loanById(p.loanId);
+          var c = loan ? clientById(loan.clientId) : null;
+          w.add(fmtDate(p.date) + " · " + (c ? c.name : "Cliente") + " · " + money(p.amount) + (p.note ? " · " + p.note : ""), "F3", 9.5, 1, 12);
+        });
+        return L;
+      }
+      function exportGananciasPdf() {
+        downloadPdfLines(gananciasLines(gananciasMonth), "ganancias-nova-" + gananciasMonth + ".pdf", "Inversiones Nova R & L - Reporte de ganancias");
+        toast("Reporte de ganancias descargado.");
+      }
+
+      /* ================= Excel .xlsx (generador incluido en la app) ================= */
+      function xmlEsc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+      }
+      function utf8Bytes(str) {
+        if (window.TextEncoder) return new TextEncoder().encode(str);
+        var u = unescape(encodeURIComponent(str));
+        var arr = new Uint8Array(u.length);
+        for (var i = 0; i < u.length; i++) arr[i] = u.charCodeAt(i);
+        return arr;
+      }
+      var CRC_TABLE = null;
+      function crc32(bytes) {
+        if (!CRC_TABLE) {
+          CRC_TABLE = [];
+          for (var n = 0; n < 256; n++) {
+            var c = n;
+            for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+            CRC_TABLE[n] = c >>> 0;
+          }
+        }
+        var crc = 0xFFFFFFFF;
+        for (var i = 0; i < bytes.length; i++) crc = CRC_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+        return (crc ^ 0xFFFFFFFF) >>> 0;
+      }
+      function zipStore(files) {
+        var now = new Date();
+        var dosTime = ((now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1)) & 0xFFFF;
+        var dosDate = (((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate()) & 0xFFFF;
+        var parts = [], central = [], offset = 0;
+        files.forEach(function (f) {
+          var nameBytes = utf8Bytes(f.name);
+          var crc = crc32(f.bytes);
+          var head = new DataView(new ArrayBuffer(30));
+          head.setUint32(0, 0x04034b50, true);
+          head.setUint16(4, 20, true);
+          head.setUint16(6, 0x0800, true);
+          head.setUint16(8, 0, true);
+          head.setUint16(10, dosTime, true);
+          head.setUint16(12, dosDate, true);
+          head.setUint32(14, crc, true);
+          head.setUint32(18, f.bytes.length, true);
+          head.setUint32(22, f.bytes.length, true);
+          head.setUint16(26, nameBytes.length, true);
+          head.setUint16(28, 0, true);
+          parts.push(new Uint8Array(head.buffer), nameBytes, f.bytes);
+          var cen = new DataView(new ArrayBuffer(46));
+          cen.setUint32(0, 0x02014b50, true);
+          cen.setUint16(4, 20, true);
+          cen.setUint16(6, 20, true);
+          cen.setUint16(8, 0x0800, true);
+          cen.setUint16(10, 0, true);
+          cen.setUint16(12, dosTime, true);
+          cen.setUint16(14, dosDate, true);
+          cen.setUint32(16, crc, true);
+          cen.setUint32(20, f.bytes.length, true);
+          cen.setUint32(24, f.bytes.length, true);
+          cen.setUint16(28, nameBytes.length, true);
+          cen.setUint32(42, offset, true);
+          central.push(new Uint8Array(cen.buffer), nameBytes);
+          offset += 30 + nameBytes.length + f.bytes.length;
+        });
+        var cdStart = offset;
+        var cdSize = central.reduce(function (s, p) { return s + p.length; }, 0);
+        var end = new DataView(new ArrayBuffer(22));
+        end.setUint32(0, 0x06054b50, true);
+        end.setUint16(8, files.length, true);
+        end.setUint16(10, files.length, true);
+        end.setUint32(12, cdSize, true);
+        end.setUint32(16, cdStart, true);
+        return new Blob(parts.concat(central, [new Uint8Array(end.buffer)]), {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        });
+      }
+      function colName(idx) {
+        var s = "";
+        idx++;
+        while (idx > 0) { var m = (idx - 1) % 26; s = String.fromCharCode(65 + m) + s; idx = Math.floor((idx - 1) / 26); }
+        return s;
+      }
+      function sheetXml(rows, widths) {
+        var xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+          '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
+        if (widths) {
+          xml += "<cols>";
+          widths.forEach(function (w, i) { xml += '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' + w + '" customWidth="1"/>'; });
+          xml += "</cols>";
+        }
+        xml += "<sheetData>";
+        rows.forEach(function (row, ri) {
+          xml += '<row r="' + (ri + 1) + '">';
+          row.forEach(function (cell, ci) {
+            var ref = colName(ci) + (ri + 1);
+            var style = ri === 0 ? ' s="1"' : "";
+            if (typeof cell === "number") {
+              xml += '<c r="' + ref + '"' + style + "><v>" + cell + "</v></c>";
+            } else if (cell === null || cell === undefined || cell === "") {
+              xml += '<c r="' + ref + '"' + style + "/>";
+            } else {
+              xml += '<c r="' + ref + '"' + style + ' t="inlineStr"><is><t xml:space="preserve">' + xmlEsc(cell) + "</t></is></c>";
+            }
+          });
+          xml += "</row>";
+        });
+        xml += "</sheetData></worksheet>";
+        return xml;
+      }
+      function exportXlsx() {
+        var clientes = [["Nombre", "Teléfono", "Cédula", "Dirección", "Notas", "Préstamos", "Deuda actual (RD$)"]];
+        liveClients().slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).forEach(function (c) {
+          var loans = liveLoans().filter(function (l) { return l.clientId === c.id; });
+          var deuda = loans.reduce(function (s, l) { return s + loanBalance(l); }, 0);
+          clientes.push([c.name, c.phone || "", c.cedula || "", c.address || "", c.notes || "", loans.length, round2(deuda)]);
+        });
+        var prestamos = [["Cliente", "Monto (RD$)", "Cuota (RD$)", "Interés total (RD$)", "Total a pagar (RD$)", "Pagado (RD$)", "Saldo (RD$)", "Frecuencia", "Cuotas", "Primera cuota", "Estado"]];
+        liveLoans().forEach(function (loan) {
+          var c = clientById(loan.clientId);
+          prestamos.push([c ? c.name : "", round2(loan.amount), loanCuota(loan), loanInterestAmount(loan), round2(loan.total), loanPaid(loan), loanBalance(loan), freqLabel(loan.frequency), loan.installments.length, loan.startDate, loanStatus(loan).label]);
+        });
+        var pagos = [["Fecha", "Cliente", "Préstamo (inicio)", "Monto (RD$)", "Nota"]];
+        livePayments().slice().sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; }).forEach(function (p) {
+          var loan = loanById(p.loanId);
+          var c = loan ? clientById(loan.clientId) : null;
+          pagos.push([p.date, c ? c.name : "", loan ? loan.startDate : "", round2(p.amount), p.note || ""]);
+        });
+        var contentTypes = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+          '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+          '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+          '<Default Extension="xml" ContentType="application/xml"/>' +
+          '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+          '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' +
+          '<Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' +
+          '<Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' +
+          '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>';
+        var rels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+          '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+          '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+        var workbook = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+          '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
+          '<sheets><sheet name="Clientes" sheetId="1" r:id="rId1"/><sheet name="Préstamos" sheetId="2" r:id="rId2"/><sheet name="Pagos" sheetId="3" r:id="rId3"/></sheets></workbook>';
+        var wbRels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+          '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+          '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>' +
+          '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>' +
+          '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/>' +
+          '<Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
+        var styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+          '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+          '<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts>' +
+          '<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>' +
+          '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>' +
+          '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
+          '<cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs></styleSheet>';
+        var blob = zipStore([
+          { name: "[Content_Types].xml", bytes: utf8Bytes(contentTypes) },
+          { name: "_rels/.rels", bytes: utf8Bytes(rels) },
+          { name: "xl/workbook.xml", bytes: utf8Bytes(workbook) },
+          { name: "xl/_rels/workbook.xml.rels", bytes: utf8Bytes(wbRels) },
+          { name: "xl/styles.xml", bytes: utf8Bytes(styles) },
+          { name: "xl/worksheets/sheet1.xml", bytes: utf8Bytes(sheetXml(clientes, [26, 15, 15, 30, 30, 11, 17])) },
+          { name: "xl/worksheets/sheet2.xml", bytes: utf8Bytes(sheetXml(prestamos, [26, 13, 12, 16, 17, 13, 13, 12, 8, 14, 11])) },
+          { name: "xl/worksheets/sheet3.xml", bytes: utf8Bytes(sheetXml(pagos, [13, 26, 16, 13, 30])) }
+        ]);
+        downloadBlob(blob, "respaldo-nova-" + todayISO() + ".xlsx");
+        toast("Excel descargado.");
+      }
+
+      function handleImport(ev) {
+        var file = ev.target.files && ev.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function () {
+          var parsed;
+          try { parsed = JSON.parse(String(reader.result)); }
+          catch (e) { toast("El archivo no es un respaldo válido."); return; }
+          if (!parsed || !Array.isArray(parsed.clients) || !Array.isArray(parsed.loans) || !Array.isArray(parsed.payments)) {
+            toast("El archivo no tiene el formato de respaldo esperado.");
+            return;
+          }
+          openConfirm(
+            "Importar respaldo",
+            "Se reemplazarán los datos actuales por los del archivo (" + parsed.clients.length + " clientes, " +
+              parsed.loans.length + " préstamos, " + parsed.payments.length + " pagos). ¿Continuar?",
+            "Importar",
+            function () {
+              data = { clients: parsed.clients, loans: parsed.loans, payments: parsed.payments };
+              saveData();
+              detail = null;
+              currentTab = "resumen";
+              render();
+              toast("Respaldo importado.");
+            }
+          );
+        };
+        reader.readAsText(file);
+        ev.target.value = "";
+      }
+
+      /* ================= Sincronización en la nube (Supabase, cifrada) ================= */
+      var SYNC_KEY = "nova_sync_v1";
+      var SYNC_SALT = "nova-sync-v1";
+      var syncTimer = null;
+      var syncInFlight = false;
+      var syncApplying = false;
+      var syncUi = { msg: "", kind: "" };
+
+      function syncCfg() {
+        try {
+          var raw = localStorage.getItem(SYNC_KEY);
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === "object") return parsed;
+          }
+        } catch (e) {}
+        return {};
+      }
+      function saveSyncCfg(patch) {
+        var cfg = syncCfg();
+        Object.keys(patch).forEach(function (k) {
+          if (patch[k] === null) delete cfg[k];
+          else cfg[k] = patch[k];
+        });
+        try { localStorage.setItem(SYNC_KEY, JSON.stringify(cfg)); } catch (e) {}
+        return cfg;
+      }
+      function syncEnabled() {
+        var cfg = syncCfg();
+        return !!(cfg.enabled && cfg.url && cfg.anonKey && cfg.keyJwk);
+      }
+      // Debounce de 3 s tras cada cambio local (saveData la llama siempre)
+      function scheduleSync() {
+        if (syncApplying || !syncEnabled()) return;
+        if (syncTimer) clearTimeout(syncTimer);
+        syncTimer = setTimeout(function () { syncTimer = null; syncNow({ silent: true }); }, 3000);
+      }
+      function refreshSyncView() {
+        if (!isLoggedIn() || currentTab !== "ajustes" || detail) return;
+        if (document.getElementById("modalRoot").innerHTML) return;
+        var ae = document.activeElement;
+        if (ae && (ae.tagName === "INPUT" || ae.tagName === "TEXTAREA" || ae.tagName === "SELECT")) return;
+        render();
+      }
+      function b64FromBytes(bytes) {
+        var s = "";
+        for (var i = 0; i < bytes.length; i += 32768) {
+          s += String.fromCharCode.apply(null, bytes.subarray(i, i + 32768));
+        }
+        return btoa(s);
+      }
+      function bytesFromB64(b64) {
+        var bin = atob(String(b64));
+        var bytes = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return bytes;
+      }
+      // Clave AES-GCM 256 derivada de la contraseña de la app (PBKDF2 · SHA-256 · salt fijo · 60000 iteraciones)
+      function deriveSyncKey(password) {
+        var enc = new TextEncoder();
+        return crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveKey"])
+          .then(function (baseKey) {
+            return crypto.subtle.deriveKey(
+              { name: "PBKDF2", salt: enc.encode(SYNC_SALT), iterations: 60000, hash: "SHA-256" },
+              baseKey,
+              { name: "AES-GCM", length: 256 },
+              true,
+              ["encrypt", "decrypt"]
+            );
+          });
+      }
+      function syncKeyFromStore() {
+        var cfg = syncCfg();
+        if (!cfg.keyJwk) return Promise.reject(new Error("sin-clave"));
+        var jwk;
+        try { jwk = JSON.parse(atob(cfg.keyJwk)); }
+        catch (e) { return Promise.reject(new Error("sin-clave")); }
+        return crypto.subtle.importKey("jwk", jwk, { name: "AES-GCM", length: 256 }, true, ["encrypt", "decrypt"]);
+      }
+      // El payload que viaja es base64 de JSON {iv, ct} (iv aleatorio de 12 bytes por cifrado)
+      function syncEncrypt(dataset) {
+        return syncKeyFromStore().then(function (key) {
+          var iv = crypto.getRandomValues(new Uint8Array(12));
+          var plain = new TextEncoder().encode(JSON.stringify(dataset));
+          return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, plain).then(function (ct) {
+            return btoa(JSON.stringify({ iv: b64FromBytes(iv), ct: b64FromBytes(new Uint8Array(ct)) }));
+          });
+        });
+      }
+      function syncDecrypt(payloadB64) {
+        var parsed;
+        try { parsed = JSON.parse(atob(String(payloadB64))); }
+        catch (e) { return Promise.reject(new Error("payload-invalido")); }
+        return syncKeyFromStore().then(function (key) {
+          return crypto.subtle.decrypt({ name: "AES-GCM", iv: bytesFromB64(parsed.iv) }, key, bytesFromB64(parsed.ct))
+            .then(function (plain) { return JSON.parse(new TextDecoder().decode(plain)); });
+        });
+      }
+      function syncHttpError(status, body) {
+        var err = new Error("http-" + status);
+        err.status = status;
+        err.body = body || "";
+        return err;
+      }
+      function syncHeaders(cfg) {
+        return { "apikey": cfg.anonKey, "Authorization": "Bearer " + cfg.anonKey };
+      }
+      function syncFetchRow(cfg) {
+        return fetch(cfg.url + "/rest/v1/nova_sync?id=eq.main&select=payload,updated_at", { headers: syncHeaders(cfg) })
+          .then(function (res) {
+            if (!res.ok) return res.text().then(function (t) { throw syncHttpError(res.status, t); });
+            return res.json();
+          })
+          .then(function (rows) { return rows && rows.length ? rows[0] : null; });
+      }
+      function syncPushRow(cfg, payloadB64) {
+        var headers = syncHeaders(cfg);
+        headers["Content-Type"] = "application/json";
+        headers["Prefer"] = "resolution=merge-duplicates";
+        return fetch(cfg.url + "/rest/v1/nova_sync?on_conflict=id", {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify({ id: "main", payload: payloadB64, updated_at: new Date().toISOString() })
+        }).then(function (res) {
+          if (!res.ok) return res.text().then(function (t) { throw syncHttpError(res.status, t); });
+          return null;
+        });
+      }
+      function syncErrorMessage(err) {
+        if (err && err.status) {
+          var body = String(err.body || "");
+          if (err.status === 404 || body.indexOf("42P01") >= 0 || body.indexOf("PGRST205") >= 0) {
+            return "No se encontró la tabla nova_sync en tu proyecto de Supabase. Créala con el código SQL de esta pestaña e inténtalo de nuevo.";
+          }
+          if (err.status === 401 || err.status === 403) {
+            return "La clave anónima fue rechazada. Revisa que copiaste la anon key correcta (Project Settings → API).";
+          }
+          return "Supabase respondió con un error (HTTP " + err.status + "). Revisa la URL del proyecto e inténtalo de nuevo.";
+        }
+        if (err && err.message === "sin-clave") {
+          return "Falta la clave de cifrado en este teléfono. Toca «Desactivar» y vuelve a tocar «Probar y activar» escribiendo tu contraseña.";
+        }
+        if (err && (err.name === "OperationError" || err.name === "InvalidCharacterError" || err.name === "SyntaxError" || err.message === "payload-invalido")) {
+          return "No se pudo descifrar la copia guardada en la nube. Casi siempre es porque la contraseña de la app es distinta en este teléfono.";
+        }
+        return "Sin conexión a internet o el servidor no responde. Inténtalo cuando tengas conexión.";
+      }
+      // Fusión por registro: gana el updatedAt mayor; sin updatedAt = antiguo (época)
+      var SYNC_EPOCH = "1970-01-01T00:00:00.000Z";
+      function recTime(r) { return r && r.updatedAt ? String(r.updatedAt) : SYNC_EPOCH; }
+      function mergeCollection(localArr, remoteArr) {
+        var map = {}, order = [];
+        function put(r) {
+          if (!r || !r.id) return;
+          if (!Object.prototype.hasOwnProperty.call(map, r.id)) { map[r.id] = r; order.push(r.id); }
+          else if (recTime(r) > recTime(map[r.id])) map[r.id] = r;
+        }
+        (localArr || []).forEach(put);
+        (remoteArr || []).forEach(put);
+        return order.map(function (id) { return map[id]; });
+      }
+      function mergeDatasets(local, remote) {
+        if (!remote || typeof remote !== "object") return local;
+        return {
+          clients: mergeCollection(local.clients, remote.clients),
+          loans: mergeCollection(local.loans, remote.loans),
+          payments: mergeCollection(local.payments, remote.payments)
+        };
+      }
+      function syncNow(opts) {
+        opts = opts || {};
+        if (syncInFlight) return Promise.resolve(false);
+        if (!syncEnabled()) return Promise.resolve(false);
+        var cfg = syncCfg();
+        if (typeof navigator !== "undefined" && navigator.onLine === false) {
+          syncUi = { msg: "Sin conexión", kind: "error" };
+          if (!opts.silent) toast("Sin conexión a internet. Inténtalo cuando vuelva la conexión.");
+          refreshSyncView();
+          return Promise.resolve(false);
+        }
+        syncInFlight = true;
+        return syncFetchRow(cfg)
+          .then(function (row) { return row ? syncDecrypt(row.payload) : null; })
+          .then(function (remoteData) {
+            var before = JSON.stringify(data);
+            data = mergeDatasets(data, remoteData);
+            syncApplying = true;
+            saveData();
+            syncApplying = false;
+            var changed = JSON.stringify(data) !== before;
+            return syncEncrypt(data).then(function (payloadB64) {
+              return syncPushRow(cfg, payloadB64).then(function () { return changed; });
+            });
+          })
+          .then(function (changed) {
+            syncInFlight = false;
+            saveSyncCfg({ lastSync: new Date().toISOString() });
+            syncUi = { msg: "", kind: "" };
+            if (!opts.silent) toast("Sincronización completada.");
+            if (changed && isLoggedIn()) render();
+            else refreshSyncView();
+            return true;
+          })
+          .catch(function (err) {
+            syncInFlight = false;
+            syncApplying = false;
+            var msg = syncErrorMessage(err);
+            syncUi = { msg: msg, kind: "error" };
+            if (!opts.silent) toast(msg);
+            refreshSyncView();
+            return false;
+          });
+      }
+      function activateSync() {
+        var urlInput = document.getElementById("syncUrl");
+        var keyInput = document.getElementById("syncKey");
+        var url = (urlInput ? urlInput.value : "").trim().replace(/\/+$/, "").replace(/\/rest\/v1$/i, "");
+        var anon = (keyInput ? keyInput.value : "").trim();
+        if (!url || !anon) { toast("Escribe la URL del proyecto y la clave anónima de Supabase."); return; }
+        if (url.indexOf("https://") !== 0) { toast("La URL del proyecto debe empezar con https://"); return; }
+        if (!window.crypto || !crypto.subtle) { toast("Este navegador no permite el cifrado seguro que necesita la sincronización."); return; }
+        openModal(
+          "<h3>Activar sincronización</h3>" +
+          "<p style='color:var(--muted);line-height:1.6'>Escribe la contraseña de la app. Con ella se crea la clave que cifra tus datos antes de subirlos: en Supabase solo quedará texto cifrado, y el otro teléfono necesitará la misma contraseña para leerlo.</p>" +
+          '<form id="syncPassForm">' +
+          '<div id="syncPassError" class="form-error hidden">Contraseña incorrecta. Es la misma con la que entras a la app.</div>' +
+          '<div class="field"><label for="syncPass">Contraseña de la app</label><input id="syncPass" type="password" autocomplete="current-password" required /></div>' +
+          modalButtons("Probar y activar") +
+          "</form>"
+        );
+        var form = document.getElementById("syncPassForm");
+        bindModalCommon(form);
+        document.getElementById("syncPass").focus({ preventScroll: true });
+        form.addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          var pass = document.getElementById("syncPass").value;
+          verifyAppPassword(pass).then(function (okPass) {
+            if (!okPass) {
+              document.getElementById("syncPassError").classList.remove("hidden");
+              return;
+            }
+            closeModal();
+            toast("Probando la conexión con Supabase…");
+            deriveSyncKey(pass)
+              .then(function (key) { return crypto.subtle.exportKey("jwk", key); })
+              .then(function (jwk) {
+                saveSyncCfg({ url: url, anonKey: anon, keyJwk: btoa(JSON.stringify(jwk)), enabled: true });
+                return syncNow({ silent: true });
+              })
+              .then(function (ok) {
+                if (ok) {
+                  toast("Sincronización activada.");
+                } else {
+                  saveSyncCfg({ enabled: false });
+                  toast(syncUi.msg || "No se pudo activar la sincronización.");
+                }
+                refreshSyncView();
+              })
+              .catch(function () {
+                saveSyncCfg({ enabled: false });
+                toast("No se pudo activar la sincronización.");
+                refreshSyncView();
+              });
+          });
+        });
+      }
+      function deactivateSync() {
+        openConfirm("Desactivar sincronización", "La app dejará de subir y bajar datos de Supabase. Los datos de este teléfono no se borran y la copia cifrada seguirá guardada en Supabase.", "Desactivar", function () {
+          saveSyncCfg({ enabled: false, keyJwk: null });
+          syncUi = { msg: "", kind: "" };
+          render();
+          toast("Sincronización desactivada.");
+        });
+      }
+      window.addEventListener("online", function () { if (isLoggedIn()) syncNow({ silent: true }); });
+
+      /* ================= Inicio ================= */
+      if (isLoggedIn()) showApp();
+      else showLogin();
+    </script>
+  </body>
+</html>
